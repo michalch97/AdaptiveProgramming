@@ -41,10 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyMetadata.cs" />
     <Compile Include="Enum\AbstractEnum.cs" />
-    <Compile Include="AccessLevel.cs" />
+    <Compile Include="Enum\AccessLevel.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="MethodMetadata.cs" />
+    <Compile Include="NamespaceMetadata.cs" />
     <Compile Include="ParameterMetadata.cs" />
     <Compile Include="PropertyMetadata.cs" />
     <Compile Include="Enum\SealedEnum.cs" />
