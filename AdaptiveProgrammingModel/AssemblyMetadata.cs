@@ -8,8 +8,8 @@ namespace AdaptiveProgrammingModel
 {
     public class AssemblyMetadata
     {
-        private string assemblyName;
-        private IEnumerable<NamespaceMetadata> namespaces;
+        internal string assemblyName;
+        internal IEnumerable<NamespaceMetadata> namespaces;
 
         public AssemblyMetadata(Assembly assembly)
         {

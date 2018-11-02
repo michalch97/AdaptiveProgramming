@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyLoader.cs" />
     <Compile Include="AssemblyMetadata.cs" />
     <Compile Include="Enum\AbstractEnum.cs" />
     <Compile Include="Enum\AccessLevel.cs" />
