@@ -4,9 +4,26 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AdaptiveProgrammingWPFView"
+        xmlns:vm="clr-namespace:AdaptiveProgrammingViewModel;assembly=AdaptiveProgrammingViewModel"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+    <Window.Resources>
+        <vm:MainViewModel x:Key="viewModel" />
+    </Window.Resources>
+    <Grid DataContext="{StaticResource viewModel}">
+        <TreeView Name="TreeView" Margin="312,19,8,23" RenderTransformOrigin="0.5,0.5" ItemsSource="{Binding  TreeViewArea}">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}">
+                    <TextBlock Text="{Binding Path=Name}" Margin="0,0,4,0" />
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
+        <TextBox Text="{Binding Mode=OneWay,Path=PathVariable,UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Left" Height="25" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="257"/>
+        <Button x:Name="Browse" Content="Browse" Command="{Binding BrowseDll}" HorizontalAlignment="Left" Margin="192,78,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </Window>
