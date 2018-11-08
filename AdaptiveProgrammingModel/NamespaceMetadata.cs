@@ -9,7 +9,7 @@ namespace AdaptiveProgrammingModel
     public class NamespaceMetadata
     {
         private string namespaceName;
-        private List<TypeMetadata> typesMetadatas = new List<TypeMetadata>();
+        private List<TypeMetadata> typesMetadata = new List<TypeMetadata>();
         private IEnumerable<Type> t;
         public NamespaceMetadata(string namespaceName, IEnumerable<Type> types)
         {
@@ -22,15 +22,25 @@ namespace AdaptiveProgrammingModel
                 if (firsTime)
                 {
                     TypeMetadata newTypeMetadata = new TypeMetadata(type);
-                    typesMetadatas.Add(newTypeMetadata);
+                    typesMetadata.Add(newTypeMetadata);
                     AssemblyLoader.loadedTypes.Add(id, newTypeMetadata);
                 }
                 else
                 {
                     AssemblyLoader.loadedTypes.TryGetValue(id, out TypeMetadata loadedTypeMetadata);
-                    typesMetadatas.Add(loadedTypeMetadata);
+                    typesMetadata.Add(loadedTypeMetadata);
                 }
+            }
+        }
+
+        public string NamespaceName
+        {
+            get { return this.namespaceName; }
+        }
+
+        public List<TypeMetadata> TypesMetadata
+        {
+            get { return typesMetadata; }
         }
     }
-}
 }

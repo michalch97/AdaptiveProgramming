@@ -10,5 +10,10 @@
             this.name = name;
             this.typeMetadata = typeMetadata;
         }
+
+        public string Name
+        {
+            get { return this.name + " (TYPE: " + typeMetadata.TypeName + ") "; }
+        }
     }
 }

@@ -151,5 +151,25 @@ namespace AdaptiveProgrammingModel
                 abstractEnum = AbstractEnum.Abstract;
             return new Tuple<AccessLevel, SealedEnum, AbstractEnum>(access, sealedEnum, abstractEnum);
         }
+
+        public string TypeName
+        {
+            get { return this.typeName; }
+        }
+
+        public IEnumerable<MethodMetadata> MethodsMetadata
+        {
+            get { return this.methods; }
+        }
+
+        public IEnumerable<TypeMetadata> NestedTypesMetadata
+        {
+            get { return this.nestedTypes; }
+        }
+
+        public IEnumerable<PropertyMetadata> Properties
+        {
+            get { return this.properties; }
+        }
     }
 }

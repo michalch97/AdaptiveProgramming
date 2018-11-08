@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -43,12 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyView.cs" />
     <Compile Include="BrowseDLL.cs" />
     <Compile Include="LoadDLL.cs" />
     <Compile Include="MainViewModel.cs" />
+    <Compile Include="MethodView.cs" />
+    <Compile Include="NamespaceView.cs" />
+    <Compile Include="ParameterView.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyView.cs" />
     <Compile Include="TreeViewItem.cs" />
+    <Compile Include="TypeView.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AdaptiveProgrammingModel\AdaptiveProgrammingModel.csproj">

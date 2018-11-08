@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -66,6 +67,19 @@ namespace AdaptiveProgrammingModel
             return from MethodBase _currentMethod in methods
                 where _currentMethod.GetVisible()
                 select new MethodMetadata(_currentMethod);
+        }
+
+        public string Name
+        {
+            get { return this.name + " (TYPE: " + returnType.TypeName + ") "; }
+        }
+
+        public IEnumerable<ParameterMetadata> Parameters
+        {
+            get
+            {
+                return this.parameters;
+            }
         }
     }
 }

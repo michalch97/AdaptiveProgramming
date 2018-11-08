@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 
@@ -19,6 +20,16 @@ namespace AdaptiveProgrammingModel
                          into g
                          orderby g.Key
                          select new NamespaceMetadata(g.Key, g);
+        }
+
+        public string AssemblyName
+        {
+            get { return assemblyName; }
+        }
+
+        public IEnumerable<NamespaceMetadata> Namespaces
+        {
+            get { return namespaces; }
         }
     }
 }

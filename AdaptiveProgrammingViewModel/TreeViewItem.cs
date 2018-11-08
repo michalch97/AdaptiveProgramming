@@ -1,17 +1,18 @@
 ﻿using System.Collections.ObjectModel;
+using AdaptiveProgrammingModel;
 
 namespace AdaptiveProgrammingViewModel
 {
-    public class TreeViewItem//zamiast new TreeViewItem dajemy klasę, namespace, ..., dziedziczące z TreeViewItem
+    public abstract class TreeViewItem//zamiast new TreeViewItem dajemy klasę, namespace, ..., dziedziczące z TreeViewItem
     {
         private bool isExpanded;
-        private bool wasBuilt;
+        public bool wasBuilt;
         public string Name { get; set; }
-        public ObservableCollection<TreeViewItem> Children { get; set; }
+        public ObservableCollection<TreeViewItem> Children { get; set; } = new ObservableCollection<TreeViewItem>();
 
         public bool IsExpanded
         {
-            get { return IsExpanded; }
+            get { return isExpanded; }
             set
             {
                 isExpanded = value;
@@ -25,10 +26,6 @@ namespace AdaptiveProgrammingViewModel
             }
         }
 
-        private void BuildMyself()
-        {
-            //czytamy z modelu skladowe klasy którą wczytaliśmy w modelu
-
-        }
+        public abstract void BuildMyself();
     }
 }

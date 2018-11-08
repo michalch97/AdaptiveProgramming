@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Windows;
+using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Input;
 using AdaptiveProgrammingModel;
@@ -13,6 +13,7 @@ namespace AdaptiveProgrammingViewModel
     public class MainViewModel : INotifyPropertyChanged
     {
         private AssemblyMetadata assemblyMetadata;
+        private AssemblyView assemblyView = new AssemblyView();
         public ObservableCollection<TreeViewItem> TreeViewArea { get; set; }
         public string DLLPath { get; set; }
         public bool ChangeButtonState { get; set; } = false;
@@ -27,6 +28,7 @@ namespace AdaptiveProgrammingViewModel
         public MainViewModel()
         {
             TreeViewArea = new ObservableCollection<TreeViewItem>();
+            BindingOperations.EnableCollectionSynchronization(TreeViewArea, assemblyView);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -58,6 +60,14 @@ namespace AdaptiveProgrammingViewModel
         public void LoadDLLFile()
         {
             assemblyMetadata = AssemblyLoader.LoadAssembly(DLLPath);
+            assemblyView.initializeAssembly(assemblyMetadata);
+            //assemblyView.assemblyMetadata = assemblyMetadata;
+            //assemblyView.IsExpanded = true;
+            //Dispatcher.CurrentDispatcher.Invoke(() => TreeViewArea.Add(assemblyView));
+            lock (assemblyView)
+            {
+                TreeViewArea.Add(assemblyView);
+            }
         }
     }
 }

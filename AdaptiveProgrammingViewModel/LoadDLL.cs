@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace AdaptiveProgrammingViewModel
 {
-    public class LoadDLL: ICommand
+    public class LoadDLL : ICommand
     {
         private MainViewModel viewModel;
         public event EventHandler CanExecuteChanged;

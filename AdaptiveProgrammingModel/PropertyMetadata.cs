@@ -19,5 +19,14 @@ namespace AdaptiveProgrammingModel
                 where prop.GetGetMethod().GetVisible() || prop.GetSetMethod().GetVisible()
                 select new PropertyMetadata(prop.Name, TypeMetadata.EmitReference(prop.PropertyType));
         }
+        public string Name
+        {
+            get { return this.name + " (TYPE: " + typeMetadata.TypeName + ") " ; }
+        }
+
+        public TypeMetadata TypeMetadata
+        {
+            get { return this.typeMetadata; }
+        }
     }
 }
