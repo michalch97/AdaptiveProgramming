@@ -62,28 +62,33 @@ namespace AdaptiveProgrammingModel
             }
             else
             {
-                AssemblyLoader.loadedTypes.TryGetValue(id, out TypeMetadata newTypeMetadata);
-                if (newTypeMetadata.GetSupplemented())
-                {
-                    return newTypeMetadata;
-                }
+                if (!type.IsGenericType)
+                    return new TypeMetadata(type.Name, type.GetNamespace());
                 else
                 {
-                    newTypeMetadata.typeName = type.Name;
-                    newTypeMetadata.declaringType = EmitDeclaringType(type.DeclaringType);
-                    newTypeMetadata.constructors = MethodMetadata.EmitMethods(type.GetConstructors());
-                    newTypeMetadata.methods = MethodMetadata.EmitMethods(type.GetMethods());
-                    newTypeMetadata.nestedTypes = EmitNestedTypes(type.GetNestedTypes());
-                    newTypeMetadata.implementedInterfaces = EmitImplements(type.GetInterfaces());
-                    newTypeMetadata.genericArguments = !type.IsGenericTypeDefinition ? null : TypeMetadata.EmitGenericArguments(type.GetGenericArguments());
-                    newTypeMetadata.modifiers = EmitModifiers(type);
-                    newTypeMetadata.baseType = EmitExtends(type.BaseType);
-                    newTypeMetadata.properties = PropertyMetadata.EmitProperties(type.GetProperties());
-                    newTypeMetadata.typeKind = GetTypeKind(type);
-                    newTypeMetadata.attributes = type.GetCustomAttributes(false).Cast<Attribute>();
-                    newTypeMetadata.isSupplemented = true;
-                    AssemblyLoader.loadedTypes[id] = newTypeMetadata;
-                    return newTypeMetadata;
+                    bool load = AssemblyLoader.loadedTypes.TryGetValue(id, out TypeMetadata newTypeMetadata);
+                    if (newTypeMetadata.GetSupplemented())
+                    {
+                        return newTypeMetadata;
+                    }
+                    else
+                    {
+                        newTypeMetadata.typeName = type.Name;
+                        newTypeMetadata.declaringType = EmitDeclaringType(type.DeclaringType);
+                        newTypeMetadata.constructors = MethodMetadata.EmitMethods(type.GetConstructors());
+                        newTypeMetadata.methods = MethodMetadata.EmitMethods(type.GetMethods());
+                        newTypeMetadata.nestedTypes = EmitNestedTypes(type.GetNestedTypes());
+                        newTypeMetadata.implementedInterfaces = EmitImplements(type.GetInterfaces());
+                        newTypeMetadata.genericArguments = !type.IsGenericTypeDefinition ? null : TypeMetadata.EmitGenericArguments(type.GetGenericArguments());
+                        newTypeMetadata.modifiers = EmitModifiers(type);
+                        newTypeMetadata.baseType = EmitExtends(type.BaseType);
+                        newTypeMetadata.properties = PropertyMetadata.EmitProperties(type.GetProperties());
+                        newTypeMetadata.typeKind = GetTypeKind(type);
+                        newTypeMetadata.attributes = type.GetCustomAttributes(false).Cast<Attribute>();
+                        newTypeMetadata.isSupplemented = true;
+                        AssemblyLoader.loadedTypes[id] = newTypeMetadata;
+                        return newTypeMetadata;
+                    }
                 }
             }
         }
