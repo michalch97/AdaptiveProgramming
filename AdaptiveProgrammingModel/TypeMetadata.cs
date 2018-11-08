@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Configuration;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +10,7 @@ namespace AdaptiveProgrammingModel
 {
     public class TypeMetadata
     {
+        private bool isSupplemented;
         private string typeName;
         private string namespaceName;
         private TypeMetadata baseType;
@@ -16,16 +19,16 @@ namespace AdaptiveProgrammingModel
         private TypeKind typeKind;
         private IEnumerable<Attribute> attributes;
         private IEnumerable<TypeMetadata> implementedInterfaces;
-        private IEnumerable<TypeMetadata>nestedTypes;
+        private IEnumerable<TypeMetadata> nestedTypes;
         private IEnumerable<PropertyMetadata> properties;
         private TypeMetadata declaringType;
         private IEnumerable<MethodMetadata> methods;
         private IEnumerable<MethodMetadata> constructors;
-
         private TypeMetadata(string typeName, string namespaceName)
         {
             this.typeName = typeName;
             this.namespaceName = namespaceName;
+            this.isSupplemented = false;
         }
         private TypeMetadata(string typeName, string namespaceName, IEnumerable<TypeMetadata> genericArguments) : this(typeName, namespaceName)
         {
@@ -45,35 +48,69 @@ namespace AdaptiveProgrammingModel
             this.properties = PropertyMetadata.EmitProperties(type.GetProperties());
             this.typeKind = GetTypeKind(type);
             this.attributes = type.GetCustomAttributes(false).Cast<Attribute>();
+            this.isSupplemented = true;
         }
-
         public static TypeMetadata EmitReference(Type type)
         {
-            if (!type.IsGenericType)
-                return new TypeMetadata(type.Name, type.GetNamespace());
+            long id = AssemblyLoader.idGenerator.GetId(type, out bool firstTime);
+            if (firstTime)
+            {
+                if (!type.IsGenericType)
+                    return new TypeMetadata(type.Name, type.GetNamespace());
+                else
+                    return new TypeMetadata(type.Name, type.GetNamespace(), EmitGenericArguments(type.GetGenericArguments()));
+            }
             else
-                return new TypeMetadata(type.Name, type.GetNamespace(), EmitGenericArguments(type.GetGenericArguments()));
+            {
+                AssemblyLoader.loadedTypes.TryGetValue(id, out TypeMetadata newTypeMetadata);
+                if (newTypeMetadata.GetSupplemented())
+                {
+                    return newTypeMetadata;
+                }
+                else
+                {
+                    newTypeMetadata.typeName = type.Name;
+                    newTypeMetadata.declaringType = EmitDeclaringType(type.DeclaringType);
+                    newTypeMetadata.constructors = MethodMetadata.EmitMethods(type.GetConstructors());
+                    newTypeMetadata.methods = MethodMetadata.EmitMethods(type.GetMethods());
+                    newTypeMetadata.nestedTypes = EmitNestedTypes(type.GetNestedTypes());
+                    newTypeMetadata.implementedInterfaces = EmitImplements(type.GetInterfaces());
+                    newTypeMetadata.genericArguments = !type.IsGenericTypeDefinition ? null : TypeMetadata.EmitGenericArguments(type.GetGenericArguments());
+                    newTypeMetadata.modifiers = EmitModifiers(type);
+                    newTypeMetadata.baseType = EmitExtends(type.BaseType);
+                    newTypeMetadata.properties = PropertyMetadata.EmitProperties(type.GetProperties());
+                    newTypeMetadata.typeKind = GetTypeKind(type);
+                    newTypeMetadata.attributes = type.GetCustomAttributes(false).Cast<Attribute>();
+                    newTypeMetadata.isSupplemented = true;
+                    AssemblyLoader.loadedTypes[id] = newTypeMetadata;
+                    return newTypeMetadata;
+                }
+            }
         }
         public static IEnumerable<TypeMetadata> EmitGenericArguments(IEnumerable<Type> arguments)
         {
             return from Type argument in arguments select EmitReference(argument);
         }
-        private TypeMetadata EmitDeclaringType(Type declaringType)
+        public bool GetSupplemented()
+        {
+            return this.isSupplemented;
+        }
+        private static TypeMetadata EmitDeclaringType(Type declaringType)
         {
             if (declaringType == null)
                 return null;
             return EmitReference(declaringType);
         }
-        private IEnumerable<TypeMetadata> EmitNestedTypes(IEnumerable<Type> nestedTypes)
+        private static IEnumerable<TypeMetadata> EmitNestedTypes(IEnumerable<Type> nestedTypes)
         {
             return from type in nestedTypes
-                where type.GetVisible()
-                select new TypeMetadata(type);
+                   where type.GetVisible()
+                   select new TypeMetadata(type);
         }
-        private IEnumerable<TypeMetadata> EmitImplements(IEnumerable<Type> interfaces)
+        private static IEnumerable<TypeMetadata> EmitImplements(IEnumerable<Type> interfaces)
         {
             return from currentInterface in interfaces
-                select EmitReference(currentInterface);
+                   select EmitReference(currentInterface);
         }
         private static TypeKind GetTypeKind(Type type) //#80 TPA: Reflection - Invalid return value of GetTypeKind() 
         {

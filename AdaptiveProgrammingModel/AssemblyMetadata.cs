@@ -15,7 +15,7 @@ namespace AdaptiveProgrammingModel
         {
             assemblyName = assembly.ManifestModule.Name;
             namespaces = from Type t in assembly.GetTypes()
-                         where t.GetVisible()
+                         //where t.GetVisible()
                          group t by t.GetNamespace()
                          into g
                          orderby g.Key
