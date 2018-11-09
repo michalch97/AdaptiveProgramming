@@ -6,17 +6,18 @@ using System.Runtime.Serialization;
 
 namespace AdaptiveProgrammingModel
 {
-    public class NamespaceMetadata
+    [Serializable]
+    public class NamespaceMetadata : ISerializable
     {
         private string namespaceName;
         private List<TypeMetadata> typesMetadata = new List<TypeMetadata>();
-        private IEnumerable<Type> t;
+        private List<Type> tp = new List<Type>();
+        
         public NamespaceMetadata(string namespaceName, IEnumerable<Type> types)
         {
             this.namespaceName = namespaceName;
-            //this.types = from type in types orderby type.Name select new TypeMetadata(type);
-            this.t = from type in types orderby type.Name select type;
-            foreach (Type type in t)
+            this.tp = (from type in types orderby type.Name select type).ToList();
+            foreach (Type type in tp)
             {
                 long id = AssemblyLoader.idGenerator.GetId(type, out bool firsTime);
                 if (firsTime)
@@ -32,15 +33,33 @@ namespace AdaptiveProgrammingModel
                 }
             }
         }
-
         public string NamespaceName
         {
             get { return this.namespaceName; }
+            private set { this.namespaceName = value; }
         }
-
         public List<TypeMetadata> TypesMetadata
         {
-            get { return typesMetadata; }
+            get { return this.typesMetadata; }
+            private set { this.typesMetadata = value; }
+        }
+
+        public NamespaceMetadata(SerializationInfo info, StreamingContext context)
+        {
+            namespaceName = (string) info.GetValue("namespaceName", typeof(string));
+            typesMetadata = (List<TypeMetadata>) info.GetValue("typesMetadata", typeof(List<TypeMetadata>));
+            IEnumerable<string> temptp = (IEnumerable<string>) info.GetValue("tp", typeof(IEnumerable<string>));
+            foreach (string s in temptp)
+            {
+                tp.Add(Type.GetType(s));
+            }
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("namespaceName", namespaceName);
+            info.AddValue("typesMetadata", typesMetadata);
+            info.AddValue("tp", tp);
         }
     }
 }

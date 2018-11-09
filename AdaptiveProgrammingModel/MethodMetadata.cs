@@ -4,10 +4,12 @@ using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 
 namespace AdaptiveProgrammingModel
 {
-    public class MethodMetadata
+    [Serializable]
+    public class MethodMetadata : ISerializable
     {
         private string name;
         private IEnumerable<TypeMetadata> genericArguments;
@@ -15,7 +17,7 @@ namespace AdaptiveProgrammingModel
         private TypeMetadata returnType;
         private bool extension;
         private IEnumerable<ParameterMetadata> parameters;
-
+        
         private MethodMetadata(MethodBase method)
         {
             this.name = method.Name;
@@ -68,18 +70,39 @@ namespace AdaptiveProgrammingModel
                 where _currentMethod.GetVisible()
                 select new MethodMetadata(_currentMethod);
         }
-
         public string Name
         {
             get { return this.name + " (TYPE: " + returnType.TypeName + ") "; }
+            private set { this.name = value; }
         }
-
         public IEnumerable<ParameterMetadata> Parameters
         {
             get
             {
                 return this.parameters;
             }
+            private set { this.parameters = value; }
+        }
+
+        public MethodMetadata(SerializationInfo info, StreamingContext context)
+        {
+            name = (string) info.GetValue("name", typeof(string));
+            genericArguments = (IEnumerable<TypeMetadata>) info.GetValue("genericArguments", typeof(IEnumerable<TypeMetadata>));
+            modifiers = (Tuple<AccessLevel,AbstractEnum,StaticEnum,VirtualEnum>) info.GetValue("modifiers", typeof(Tuple<AccessLevel, AbstractEnum, StaticEnum, VirtualEnum>));
+            returnType = (TypeMetadata) info.GetValue("returnType", typeof(TypeMetadata));
+            extension = (bool) info.GetValue("extension", typeof(bool));
+            parameters =
+                (IEnumerable<ParameterMetadata>) info.GetValue("parameters", typeof(IEnumerable<ParameterMetadata>));
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("name", name);
+            info.AddValue("genericArguments", genericArguments);
+            info.AddValue("modifiers", modifiers);
+            info.AddValue("returnType", returnType);
+            info.AddValue("extension", extension);
+            info.AddValue("parameters", parameters);
         }
     }
 }

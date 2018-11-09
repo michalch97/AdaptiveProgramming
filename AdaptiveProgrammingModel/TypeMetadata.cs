@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Net.Configuration;
 using System.Runtime.Serialization;
@@ -8,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace AdaptiveProgrammingModel
 {
-    public class TypeMetadata
+    [Serializable]
+    public class TypeMetadata : ISerializable
     {
         private bool isSupplemented;
         private string typeName;
@@ -34,6 +36,7 @@ namespace AdaptiveProgrammingModel
         {
             this.genericArguments = genericArguments;
         }
+        
         public TypeMetadata(Type type)
         {
             this.typeName = type.Name;
@@ -117,7 +120,7 @@ namespace AdaptiveProgrammingModel
             return from currentInterface in interfaces
                    select EmitReference(currentInterface);
         }
-        private static TypeKind GetTypeKind(Type type) //#80 TPA: Reflection - Invalid return value of GetTypeKind() 
+        private static TypeKind GetTypeKind(Type type)
         {
             return type.IsEnum ? TypeKind.EnumType :
                 type.IsValueType ? TypeKind.StructType :
@@ -151,25 +154,60 @@ namespace AdaptiveProgrammingModel
                 abstractEnum = AbstractEnum.Abstract;
             return new Tuple<AccessLevel, SealedEnum, AbstractEnum>(access, sealedEnum, abstractEnum);
         }
-
         public string TypeName
         {
             get { return this.typeName; }
+            private set { this.typeName = value; }
         }
-
         public IEnumerable<MethodMetadata> MethodsMetadata
         {
             get { return this.methods; }
+            private set { this.methods = value; }
         }
-
         public IEnumerable<TypeMetadata> NestedTypesMetadata
         {
             get { return this.nestedTypes; }
+            private set { this.nestedTypes = value; }
         }
-
         public IEnumerable<PropertyMetadata> Properties
         {
             get { return this.properties; }
+            private set { this.properties = value; }
+        }
+
+        public TypeMetadata(SerializationInfo info, StreamingContext context)
+        {
+            isSupplemented = (bool)info.GetValue("isSupplemented",typeof(bool));
+            typeName = (string)info.GetValue("typeName", typeof(string)); ;
+            namespaceName = (string)info.GetValue("namespaceName", typeof(string));
+            baseType = (TypeMetadata)info.GetValue("baseType", typeof(TypeMetadata));
+            genericArguments = (IEnumerable<TypeMetadata>)info.GetValue("genericArguments", typeof(IEnumerable<TypeMetadata>));
+            modifiers = (Tuple<AccessLevel, SealedEnum, AbstractEnum>)info.GetValue("modifiers", typeof(Tuple<AccessLevel, SealedEnum, AbstractEnum>));
+            typeKind = (TypeKind)info.GetValue("typeKind", typeof(TypeKind));
+            attributes = (IEnumerable<Attribute>)info.GetValue("attributes", typeof(IEnumerable<Attribute>));
+            implementedInterfaces = (IEnumerable<TypeMetadata>)info.GetValue("implementedInterfaces", typeof(IEnumerable<TypeMetadata>));
+            nestedTypes = (IEnumerable<TypeMetadata>)info.GetValue("nestedTypes", typeof(IEnumerable<TypeMetadata>));
+            properties = (IEnumerable<PropertyMetadata>)info.GetValue("properties", typeof(IEnumerable<PropertyMetadata>));
+            declaringType = (TypeMetadata)info.GetValue("declaringType", typeof(TypeMetadata));
+            methods = (IEnumerable<MethodMetadata>)info.GetValue("methods", typeof(IEnumerable<MethodMetadata>));
+            constructors = (IEnumerable<MethodMetadata>)info.GetValue("constructors", typeof(IEnumerable<MethodMetadata>));
+        }
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("isSupplemented",isSupplemented);
+            info.AddValue("typeName", typeName);
+            info.AddValue("namespaceName", namespaceName);
+            info.AddValue("baseType", baseType);
+            info.AddValue("genericArguments", genericArguments);
+            info.AddValue("modifiers", modifiers);
+            info.AddValue("typeKind", typeKind);
+            info.AddValue("attributes", attributes);
+            info.AddValue("implementedInterfaces", implementedInterfaces);
+            info.AddValue("nestedTypes", nestedTypes);
+            info.AddValue("properties", properties);
+            info.AddValue("declaringType", declaringType);
+            info.AddValue("methods", methods);
+            info.AddValue("constructors", constructors);
         }
     }
 }

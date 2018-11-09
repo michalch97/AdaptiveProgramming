@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Data;
 using System.Windows.Forms;
@@ -12,11 +13,11 @@ namespace AdaptiveProgrammingViewModel
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private AssemblyMetadata assemblyMetadata;
         private AssemblyView assemblyView = new AssemblyView();
         public ObservableCollection<TreeViewItem> TreeViewArea { get; set; }
+        private JSONSerializer jsonSerializer;
         public string DLLPath { get; set; }
-        public bool ChangeButtonState { get; set; } = false;
+        public bool ChangeButtonState { get; set; }
         public ICommand BrowseDll
         {
             get { return new BrowseDLL(this); }
@@ -29,6 +30,8 @@ namespace AdaptiveProgrammingViewModel
         {
             TreeViewArea = new ObservableCollection<TreeViewItem>();
             BindingOperations.EnableCollectionSynchronization(TreeViewArea, assemblyView);
+            jsonSerializer = new JSONSerializer();
+            ChangeButtonState = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -59,11 +62,12 @@ namespace AdaptiveProgrammingViewModel
 
         public void LoadDLLFile()
         {
-            assemblyMetadata = AssemblyLoader.LoadAssembly(DLLPath);
+            AssemblyMetadata assemblyMetadata = AssemblyLoader.LoadAssembly(DLLPath);
+            //Stream stream = new FileStream("test.json", FileMode.Create, FileAccess.Write);
+            //jsonSerializer.Serialize(assemblyMetadata,stream);
+            //Stream stream2 = new FileStream("test.json",FileMode.Open, FileAccess.Read);
+            //assemblyView.initializeAssembly(jsonSerializer.Deserialize(stream2));
             assemblyView.initializeAssembly(assemblyMetadata);
-            //assemblyView.assemblyMetadata = assemblyMetadata;
-            //assemblyView.IsExpanded = true;
-            //Dispatcher.CurrentDispatcher.Invoke(() => TreeViewArea.Add(assemblyView));
             lock (assemblyView)
             {
                 TreeViewArea.Add(assemblyView);

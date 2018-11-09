@@ -1,4 +1,6 @@
-﻿namespace AdaptiveProgrammingModel
+﻿using System.Runtime.Serialization;
+
+namespace AdaptiveProgrammingModel
 {
     public enum VirtualEnum
     {
