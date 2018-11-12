@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace AdaptiveProgrammingViewModel
 {
-    public class LoadDLL : ICommand
+    public class Deserialize : ICommand
     {
         private MainViewModel viewModel;
-        public event EventHandler CanExecuteChanged;
-        public LoadDLL(MainViewModel viewModel)
+        public Deserialize(MainViewModel viewModel)
         {
             this.viewModel = viewModel;
         }
@@ -22,10 +20,12 @@ namespace AdaptiveProgrammingViewModel
         {
             Thread thread = new Thread(() =>
             {
-                this.viewModel.LoadDLLFile();
+                this.viewModel.DeserializeFile();
             });
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
         }
+
+        public event EventHandler CanExecuteChanged;
     }
 }

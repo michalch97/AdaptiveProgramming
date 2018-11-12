@@ -1,13 +1,11 @@
-﻿using AdaptiveProgrammingModel;
-
-namespace AdaptiveProgrammingViewModel
+﻿namespace AdaptiveProgrammingModel
 {
     public class AssemblyView: TreeViewItem
     {
         private AssemblyMetadata assemblyMetadata;
         public void initializeAssembly(AssemblyMetadata assemblyMetadata)
         {
-            Name = assemblyMetadata.AssemblyName + " ASSEMBLY";
+            Name = "assembly " + assemblyMetadata.AssemblyName;
             this.assemblyMetadata = assemblyMetadata;
         }
         public override void BuildMyself()

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace AdaptiveProgrammingModel
@@ -17,6 +19,10 @@ namespace AdaptiveProgrammingModel
         {
             string ns = type.Namespace;
             return ns != null ? ns : string.Empty;
+        }
+        public static IEnumerable<TypeMetadata> GetAttributes<T>(this T type) where T : ICustomAttributeProvider
+        {
+            return type.GetCustomAttributes(false).Select(t => new TypeMetadata(t.GetType()));
         }
     }
 }

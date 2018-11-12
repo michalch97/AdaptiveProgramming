@@ -1,9 +1,8 @@
 ﻿using System.Collections.ObjectModel;
-using AdaptiveProgrammingModel;
 
-namespace AdaptiveProgrammingViewModel
+namespace AdaptiveProgrammingModel
 {
-    public abstract class TreeViewItem//zamiast new TreeViewItem dajemy klasę, namespace, ..., dziedziczące z TreeViewItem
+    public abstract class TreeViewItem
     {
         private bool isExpanded;
         public bool wasBuilt;

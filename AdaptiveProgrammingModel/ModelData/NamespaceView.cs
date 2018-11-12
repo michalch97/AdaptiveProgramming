@@ -1,15 +1,14 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using AdaptiveProgrammingModel;
 
-namespace AdaptiveProgrammingViewModel
+namespace AdaptiveProgrammingModel
 {
     public class NamespaceView : TreeViewItem
     {
         private NamespaceMetadata namespaceMetadata;
         public NamespaceView(NamespaceMetadata namespaceMetadata)
         {
-            Name = namespaceMetadata.NamespaceName + " NAMESPACE";
+            Name = "namespace " + namespaceMetadata.NamespaceName;
             this.namespaceMetadata = namespaceMetadata;
         }
         public override void BuildMyself()

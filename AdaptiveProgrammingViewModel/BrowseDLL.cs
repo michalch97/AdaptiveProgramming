@@ -20,10 +20,6 @@ namespace AdaptiveProgrammingViewModel
 
         public void Execute(object parameter)
         {
-            //Task.Run(() =>
-            //{
-            //    this.viewModel.BrowseDLLFile();
-            //});
             Thread thread = new Thread(() =>
             {
                 this.viewModel.BrowseDLLFile();

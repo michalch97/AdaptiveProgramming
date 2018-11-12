@@ -13,11 +13,14 @@ namespace AdaptiveProgrammingViewModel
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private AssemblyView assemblyView = new AssemblyView();
-        public ObservableCollection<TreeViewItem> TreeViewArea { get; set; }
+        private AssemblyMetadata assemblyMetadata;
+        private AssemblyView assemblyView;
         private JSONSerializer jsonSerializer;
+        public ObservableCollection<TreeViewItem> TreeViewArea { get; set; }
         public string DLLPath { get; set; }
-        public bool ChangeButtonState { get; set; }
+        public bool ChangeLoadButtonState { get; set; }
+        public bool ChangeSerializeButtonState { get; set; }
+        public IBrowse DLLFileBrowser { get; set; }
         public ICommand BrowseDll
         {
             get { return new BrowseDLL(this); }
@@ -26,12 +29,24 @@ namespace AdaptiveProgrammingViewModel
         {
             get { return new LoadDLL(this); }
         }
+        public ICommand Serialize
+        {
+            get { return new Serialize(this); }
+        }
+        public ICommand Deserialize
+        {
+            get { return new Deserialize(this); }
+        }
         public MainViewModel()
         {
             TreeViewArea = new ObservableCollection<TreeViewItem>();
+            AssemblyView assemblyView = new AssemblyView();
             BindingOperations.EnableCollectionSynchronization(TreeViewArea, assemblyView);
             jsonSerializer = new JSONSerializer();
-            ChangeButtonState = false;
+            ChangeLoadButtonState = false;
+            OnPropertyChanged("ChangeLoadButtonState");
+            ChangeSerializeButtonState = false;
+            OnPropertyChanged("ChangeSerializeButtonState");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -42,35 +57,65 @@ namespace AdaptiveProgrammingViewModel
 
         public void BrowseDLLFile()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog()
+            string path = DLLFileBrowser.Browse();
+            if (path != null && path.Contains(".dll"))
             {
-                Filter = "Dynamic Library File(*.dll)| *.dll"
-            };
-            openFileDialog.ShowDialog();
-            if (openFileDialog.FileName.Length == 0)
-            {
-                MessageBox.Show("No files selected");
+                DLLPath = path;
+                ChangeLoadButtonState = true;
+                OnPropertyChanged("ChangeLoadButtonState");
+                OnPropertyChanged("DLLPath");
             }
             else
             {
-                DLLPath = openFileDialog.FileName;
-                ChangeButtonState = true;
-                OnPropertyChanged("ChangeButtonState");
-                OnPropertyChanged("DLLPath");
+                return;
             }
+                
         }
 
         public void LoadDLLFile()
         {
-            AssemblyMetadata assemblyMetadata = AssemblyLoader.LoadAssembly(DLLPath);
-            //Stream stream = new FileStream("test.json", FileMode.Create, FileAccess.Write);
-            //jsonSerializer.Serialize(assemblyMetadata,stream);
-            //Stream stream2 = new FileStream("test.json",FileMode.Open, FileAccess.Read);
-            //assemblyView.initializeAssembly(jsonSerializer.Deserialize(stream2));
+            assemblyMetadata = AssemblyLoader.LoadAssembly(DLLPath);
+            assemblyView = new AssemblyView();
             assemblyView.initializeAssembly(assemblyMetadata);
             lock (assemblyView)
             {
+                TreeViewArea.Clear();
                 TreeViewArea.Add(assemblyView);
+            }
+            ChangeLoadButtonState = false;
+            OnPropertyChanged("ChangeLoadButtonState");
+            ChangeSerializeButtonState = true;
+            OnPropertyChanged("ChangeSerializeButtonState");
+        }
+
+        public void SerializeFile()
+        {
+            Stream stream = new FileStream("test.json", FileMode.Create, FileAccess.Write);
+            jsonSerializer.Serialize(assemblyMetadata, stream);
+            ChangeSerializeButtonState = false;
+            OnPropertyChanged("ChangeSerializeButtonState");
+        }
+
+        public void DeserializeFile()
+        {
+            assemblyView = new AssemblyView();
+            string path = DLLFileBrowser.Browse();
+            if (path != null && path.Contains(".json"))
+            {
+                Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                assemblyMetadata = jsonSerializer.Deserialize(stream);
+                assemblyView.initializeAssembly(assemblyMetadata);
+                lock (assemblyView)
+                {
+                    TreeViewArea.Clear();
+                    TreeViewArea.Add(assemblyView);
+                }
+                ChangeLoadButtonState = false;
+                OnPropertyChanged("ChangeLoadButtonState");
+            }
+            else
+            {
+                return;
             }
         }
     }
