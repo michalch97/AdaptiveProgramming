@@ -1,10 +1,15 @@
-﻿namespace AdaptiveProgrammingViewModel
+﻿using System;
+
+namespace AdaptiveProgrammingViewModel
 {
     public class ConsoleBrowse : IBrowse
     {
         public string Browse()
         {
-            throw new System.NotImplementedException();
+            string path;
+            Console.WriteLine("Get path to DLL/JSON file: ");
+            path = Console.ReadLine();
+            return path;
         }
     }
 }

@@ -20,12 +20,12 @@ namespace AdaptiveProgrammingViewModel
 
         public void Execute(object parameter)
         {
-            Thread thread = new Thread(() =>
-            {
+            //Thread thread = new Thread(() =>
+            //
                 this.viewModel.LoadDLLFile();
-            });
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
+            //});
+            //thread.SetApartmentState(ApartmentState.STA);
+            //thread.Start();
         }
     }
 }

@@ -60,13 +60,6 @@
     <Compile Include="Enum\StaticEnum.cs" />
     <Compile Include="Enum\TypeKind.cs" />
     <Compile Include="Metadata\TypeMetadata.cs" />
-    <Compile Include="ModelData\AssemblyView.cs" />
-    <Compile Include="ModelData\MethodView.cs" />
-    <Compile Include="ModelData\NamespaceView.cs" />
-    <Compile Include="ModelData\ParameterView.cs" />
-    <Compile Include="ModelData\PropertyView.cs" />
-    <Compile Include="ModelData\TreeViewItem.cs" />
-    <Compile Include="ModelData\TypeView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Enum\VirtualEnum.cs" />
     <Compile Include="XMLSerializer.cs" />

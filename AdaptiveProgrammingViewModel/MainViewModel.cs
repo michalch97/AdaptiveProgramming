@@ -41,7 +41,7 @@ namespace AdaptiveProgrammingViewModel
         {
             TreeViewArea = new ObservableCollection<TreeViewItem>();
             AssemblyView assemblyView = new AssemblyView();
-            BindingOperations.EnableCollectionSynchronization(TreeViewArea, assemblyView);
+            //BindingOperations.EnableCollectionSynchronization(TreeViewArea, assemblyView);
             jsonSerializer = new JSONSerializer();
             ChangeLoadButtonState = false;
             OnPropertyChanged("ChangeLoadButtonState");
@@ -69,7 +69,6 @@ namespace AdaptiveProgrammingViewModel
             {
                 return;
             }
-                
         }
 
         public void LoadDLLFile()
@@ -77,11 +76,11 @@ namespace AdaptiveProgrammingViewModel
             assemblyMetadata = AssemblyLoader.LoadAssembly(DLLPath);
             assemblyView = new AssemblyView();
             assemblyView.initializeAssembly(assemblyMetadata);
-            lock (assemblyView)
-            {
+            //lock (assemblyView)
+            //{
                 TreeViewArea.Clear();
                 TreeViewArea.Add(assemblyView);
-            }
+            //}
             ChangeLoadButtonState = false;
             OnPropertyChanged("ChangeLoadButtonState");
             ChangeSerializeButtonState = true;

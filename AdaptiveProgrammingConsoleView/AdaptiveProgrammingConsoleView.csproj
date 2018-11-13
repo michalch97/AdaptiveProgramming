@@ -49,5 +49,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AdaptiveProgrammingViewModel\AdaptiveProgrammingViewModel.csproj">
+      <Project>{9ba42c68-83b1-43d3-a09d-c972d385df4c}</Project>
+      <Name>AdaptiveProgrammingViewModel</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

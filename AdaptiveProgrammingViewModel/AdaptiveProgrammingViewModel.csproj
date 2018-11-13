@@ -50,6 +50,13 @@
     <Compile Include="IBrowse.cs" />
     <Compile Include="LoadDLL.cs" />
     <Compile Include="MainViewModel.cs" />
+    <Compile Include="ViewData\AssemblyView.cs" />
+    <Compile Include="ViewData\MethodView.cs" />
+    <Compile Include="ViewData\NamespaceView.cs" />
+    <Compile Include="ViewData\ParameterView.cs" />
+    <Compile Include="ViewData\PropertyView.cs" />
+    <Compile Include="ViewData\TreeViewItem.cs" />
+    <Compile Include="ViewData\TypeView.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialize.cs" />
