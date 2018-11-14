@@ -62,7 +62,7 @@
     <Compile Include="Metadata\TypeMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Enum\VirtualEnum.cs" />
-    <Compile Include="XMLSerializer.cs" />
+    <Compile Include="TraceAP.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

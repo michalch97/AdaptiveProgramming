@@ -1,6 +1,8 @@
-﻿using System.Windows.Forms;
+﻿using System.Windows;
+using AdaptiveProgrammingViewModel;
+using Microsoft.Win32;
 
-namespace AdaptiveProgrammingViewModel
+namespace AdaptiveProgrammingView
 {
     public class WPFBrowse : IBrowse
     {
@@ -10,7 +12,6 @@ namespace AdaptiveProgrammingViewModel
             {
                 Filter = "Dynamic Library File(*.dll)|*.dll|Json files (*.json)|*.json"
             };
-            openFileDialog.ShowDialog();
             if (openFileDialog.FileName.Length == 0)
             {
                 MessageBox.Show("No files selected");

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,11 +11,12 @@ using AdaptiveProgrammingViewModel;
 namespace AdaptiveProgrammingConsoleView
 {
     class ConsoleMain
-    {
+    {   
         private static MainViewModel viewModel;
         private static bool exit;
         static void Main(string[] args)
         {
+            TraceAP.InfoLog("Console Application started","ConsoleMain");
             exit = false;
             viewModel = new MainViewModel();
             viewModel.DLLFileBrowser = new ConsoleBrowse();
@@ -35,8 +37,23 @@ namespace AdaptiveProgrammingConsoleView
                         viewModel.BrowseDll.Execute(null);
                         break;
                     case "load":
-                        viewModel.LoadDll.Execute(null);
-                        Console.WriteLine(viewModel.TreeViewArea[0].Name);
+                        if (viewModel.ChangeLoadButtonState)
+                        {
+                            try
+                            {
+                                viewModel.LoadDll.Execute(null);
+                                Console.WriteLine(viewModel.TreeViewArea[0].Name);
+                            }
+                            catch (FileNotFoundException e)
+                            {
+                                Console.WriteLine("File not found");
+                            }
+                        }
+                        else
+                        {
+                            TraceAP.WarningLog("File load fail!","ConsoleMain");
+                            Console.WriteLine("You have to select file - use \"browse\" ");
+                        }
                         break;
                     case "expand":
                         Console.WriteLine("Get name to expand: ");
@@ -48,7 +65,16 @@ namespace AdaptiveProgrammingConsoleView
                         Fold(nameToFold);
                         break;
                     case "serialize":
-                        viewModel.Serialize.Execute(null);
+                        if (viewModel.ChangeSerializeButtonState)
+                        {
+                            viewModel.Serialize.Execute(null);
+                        }
+                        else
+                        {
+                            TraceAP.WarningLog("Serialize fail!", "ConsoleMain");
+                            Console.WriteLine("You have to load file - use \"load\" ");
+                        }
+                        
                         break;
                     case "deserialize":
                         viewModel.Deserialize.Execute(null);
@@ -59,7 +85,7 @@ namespace AdaptiveProgrammingConsoleView
                         break;
                 }
             }
-
+            TraceAP.InfoLog("Console application finished","ConsoleMain");
         }
 
         private static void Fold(string nameToFold)

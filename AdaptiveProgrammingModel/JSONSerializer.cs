@@ -12,14 +12,13 @@ namespace AdaptiveProgrammingModel
             {
                 string json = JsonConvert.SerializeObject(assemblyMetadata, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings
                     {
-                       PreserveReferencesHandling = PreserveReferencesHandling.Objects//,
-                       //ConstructorHandling = ConstructorHandling.Default
-                        //ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+                       PreserveReferencesHandling = PreserveReferencesHandling.Objects
                     }
                     );
                 streamWriter.Write(json);
                 streamWriter.Flush();
             }
+            TraceAP.InfoLog("Serialization done", "JSONSerializer");
         }
 
         public AssemblyMetadata Deserialize(Stream stream)
@@ -27,12 +26,10 @@ namespace AdaptiveProgrammingModel
             StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
             AssemblyMetadata assemblyMetadata = JsonConvert.DeserializeObject<AssemblyMetadata>(streamReader.ReadToEnd(), new JsonSerializerSettings
                 {
-                    PreserveReferencesHandling = PreserveReferencesHandling.Objects//,
-                    //ConstructorHandling = ConstructorHandling.Default
-                    //ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
                 }
             );
-
+            TraceAP.InfoLog("Deserialization done", "JSONSerializer");
             return assemblyMetadata;
         }
     }

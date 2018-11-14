@@ -41,7 +41,6 @@ namespace AdaptiveProgrammingViewModel
         {
             TreeViewArea = new ObservableCollection<TreeViewItem>();
             AssemblyView assemblyView = new AssemblyView();
-            //BindingOperations.EnableCollectionSynchronization(TreeViewArea, assemblyView);
             jsonSerializer = new JSONSerializer();
             ChangeLoadButtonState = false;
             OnPropertyChanged("ChangeLoadButtonState");
@@ -67,6 +66,7 @@ namespace AdaptiveProgrammingViewModel
             }
             else
             {
+                TraceAP.WarningLog("You should chose a DLL or JSON file", "MainViewModel");
                 return;
             }
         }
@@ -76,11 +76,9 @@ namespace AdaptiveProgrammingViewModel
             assemblyMetadata = AssemblyLoader.LoadAssembly(DLLPath);
             assemblyView = new AssemblyView();
             assemblyView.initializeAssembly(assemblyMetadata);
-            //lock (assemblyView)
-            //{
-                TreeViewArea.Clear();
-                TreeViewArea.Add(assemblyView);
-            //}
+            TraceAP.InfoLog("AssemblyView initialized", "MainViewModel");
+            TreeViewArea.Clear();
+            TreeViewArea.Add(assemblyView);
             ChangeLoadButtonState = false;
             OnPropertyChanged("ChangeLoadButtonState");
             ChangeSerializeButtonState = true;
@@ -89,7 +87,7 @@ namespace AdaptiveProgrammingViewModel
 
         public void SerializeFile()
         {
-            Stream stream = new FileStream("test.json", FileMode.Create, FileAccess.Write);
+            Stream stream = new FileStream("../../../SerializationFile/assembly.json", FileMode.Create, FileAccess.Write);
             jsonSerializer.Serialize(assemblyMetadata, stream);
             ChangeSerializeButtonState = false;
             OnPropertyChanged("ChangeSerializeButtonState");

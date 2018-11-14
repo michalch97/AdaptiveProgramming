@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -14,11 +15,12 @@ namespace AdaptiveProgrammingModel
             FileInfo assemblyFileInfo = new FileInfo(assemblyFile);
             if (!assemblyFileInfo.Exists)
             {
+                TraceAP.ErrorLog("File not found", "AssemblyLoader");
                 throw new FileNotFoundException(nameof(assemblyFile));
             }
 
             Assembly assembly = Assembly.LoadFrom(assemblyFileInfo.FullName);
-
+            TraceAP.InfoLog("Assembly loaded", "AssemblyLoader");
             return new AssemblyMetadata(assembly);
         }
     }

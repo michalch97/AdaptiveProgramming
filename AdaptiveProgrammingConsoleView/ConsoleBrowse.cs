@@ -1,6 +1,7 @@
 ﻿using System;
+using AdaptiveProgrammingViewModel;
 
-namespace AdaptiveProgrammingViewModel
+namespace AdaptiveProgrammingConsoleView
 {
     public class ConsoleBrowse : IBrowse
     {

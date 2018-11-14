@@ -45,11 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BrowseDLL.cs" />
-    <Compile Include="ConsoleBrowse.cs" />
     <Compile Include="Deserialize.cs" />
     <Compile Include="IBrowse.cs" />
     <Compile Include="LoadDLL.cs" />
     <Compile Include="MainViewModel.cs" />
+    <Compile Include="TraceAP.cs" />
     <Compile Include="ViewData\AssemblyView.cs" />
     <Compile Include="ViewData\MethodView.cs" />
     <Compile Include="ViewData\NamespaceView.cs" />
@@ -60,7 +60,6 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialize.cs" />
-    <Compile Include="WPFBrowse.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AdaptiveProgrammingModel\AdaptiveProgrammingModel.csproj">

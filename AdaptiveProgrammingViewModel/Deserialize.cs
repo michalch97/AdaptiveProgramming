@@ -18,12 +18,7 @@ namespace AdaptiveProgrammingViewModel
 
         public void Execute(object parameter)
         {
-            ///Thread thread = new Thread(() =>
-            //{
-                this.viewModel.DeserializeFile();
-            //});
-            //thread.SetApartmentState(ApartmentState.STA);
-            //thread.Start();
+            this.viewModel.DeserializeFile();
         }
 
         public event EventHandler CanExecuteChanged;
