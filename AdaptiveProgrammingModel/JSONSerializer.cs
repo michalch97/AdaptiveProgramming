@@ -8,16 +8,14 @@ namespace AdaptiveProgrammingModel
     {
         public void Serialize(AssemblyMetadata assemblyMetadata, Stream stream)
         {
-            using (StreamWriter streamWriter = new StreamWriter(stream, Encoding.UTF8))
+            StreamWriter streamWriter = new StreamWriter(stream, Encoding.UTF8);
+            string json = JsonConvert.SerializeObject(assemblyMetadata, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings
             {
-                string json = JsonConvert.SerializeObject(assemblyMetadata, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings
-                    {
-                       PreserveReferencesHandling = PreserveReferencesHandling.Objects
-                    }
-                    );
-                streamWriter.Write(json);
-                streamWriter.Flush();
-            }
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            });
+            streamWriter.Write(json);
+            streamWriter.Flush();
+
             TraceAP.InfoLog("Serialization done", "JSONSerializer");
         }
 
@@ -25,9 +23,9 @@ namespace AdaptiveProgrammingModel
         {
             StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
             AssemblyMetadata assemblyMetadata = JsonConvert.DeserializeObject<AssemblyMetadata>(streamReader.ReadToEnd(), new JsonSerializerSettings
-                {
-                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
-                }
+            {
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            }
             );
             TraceAP.InfoLog("Deserialization done", "JSONSerializer");
             return assemblyMetadata;

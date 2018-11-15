@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdaptiveProgrammingWPFView"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdaptiveProgrammingConsoleView", "AdaptiveProgrammingConsoleView\AdaptiveProgrammingConsoleView.csproj", "{12EBDFDA-242B-47E8-B90B-6D2E44CBA827}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdaptiveProgrammingTest", "AdaptiveProgrammingTest\AdaptiveProgrammingTest.csproj", "{851ECFD7-C341-41C7-BDF8-23068B57B627}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{12EBDFDA-242B-47E8-B90B-6D2E44CBA827}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12EBDFDA-242B-47E8-B90B-6D2E44CBA827}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12EBDFDA-242B-47E8-B90B-6D2E44CBA827}.Release|Any CPU.Build.0 = Release|Any CPU
+		{851ECFD7-C341-41C7-BDF8-23068B57B627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{851ECFD7-C341-41C7-BDF8-23068B57B627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{851ECFD7-C341-41C7-BDF8-23068B57B627}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{851ECFD7-C341-41C7-BDF8-23068B57B627}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,11 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AdaptiveProgrammingWPFView"
         xmlns:vm="clr-namespace:AdaptiveProgrammingViewModel;assembly=AdaptiveProgrammingViewModel"
-        xmlns:adaptiveProgrammingView="clr-namespace:AdaptiveProgrammingView"
         mc:Ignorable="d"
         Title="AdaptiveProgramming" Height="450" Width="800">
     <Window.Resources>
-        <adaptiveProgrammingView:WPFBrowse x:Key="WpfBrowse"/><!-- Tworzenie obiektu wyszukwiarki -->
+        <local:WPFBrowse x:Key="WpfBrowse"/><!-- Tworzenie obiektu wyszukwiarki -->
         <vm:MainViewModel x:Key="viewModel" DLLFileBrowser="{StaticResource WpfBrowse}"/>
     </Window.Resources>
     <Grid DataContext="{StaticResource viewModel}">
