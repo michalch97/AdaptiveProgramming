@@ -8,10 +8,14 @@ using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
+    [DataContract(IsReference = true)]
     public class PropertyMetadata
     {
+        [DataMember]
         private string name;
+        [DataMember]
         private TypeMetadata typeMetadata;
+        [DataMember]
         private Tuple<AccessLevel, SealedEnum, AbstractEnum> modifiers;
         public string Name
         {

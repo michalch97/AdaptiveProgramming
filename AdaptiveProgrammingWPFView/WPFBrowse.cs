@@ -11,7 +11,7 @@ namespace AdaptiveProgrammingWPFView
         {
             OpenFileDialog openFileDialog = new OpenFileDialog()
             {
-                Filter = "Dynamic Library File(*.dll)|*.dll|Json files (*.json)|*.json"
+                Filter = "Dynamic Library File(*.dll)|*.dll|XML Files (*.xml)|*.xml"
             };
             openFileDialog.ShowDialog();
             if (openFileDialog.FileName.Length == 0)

@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Windows.Data;
 using System.Windows.Forms;
 using System.Windows.Input;
 using AdaptiveProgrammingModel;
@@ -15,7 +14,7 @@ namespace AdaptiveProgrammingViewModel
     {
         public AssemblyMetadata assemblyMetadata;
         public AssemblyView AssemblyView { get; set; }
-        private JSONSerializer jsonSerializer;
+        public IDLLSerializer serializer;
         public ObservableCollection<TreeViewItem> TreeViewArea { get; set; }
         public string DLLPath { get; set; }
         public bool ChangeLoadButtonState { get; set; }
@@ -41,7 +40,8 @@ namespace AdaptiveProgrammingViewModel
         {
             TreeViewArea = new ObservableCollection<TreeViewItem>();
             AssemblyView assemblyView = new AssemblyView();
-            jsonSerializer = new JSONSerializer();
+            //jsonSerializer = new JSONSerializer();
+            serializer = new XMLSerializer();
             ChangeLoadButtonState = false;
             OnPropertyChanged("ChangeLoadButtonState");
             ChangeSerializeButtonState = false;
@@ -66,7 +66,7 @@ namespace AdaptiveProgrammingViewModel
             }
             else
             {
-                TraceAP.WarningLog("You should chose a DLL or JSON file", "MainViewModel");
+                TraceAP.WarningLog("You should chose a DLL or XML file", "MainViewModel");
                 return;
             }
         }
@@ -87,9 +87,9 @@ namespace AdaptiveProgrammingViewModel
 
         public void SerializeFile()
         {
-            using (Stream stream = new FileStream("../../../SerializationFile/assembly.json", FileMode.Create, FileAccess.Write))
+            using (Stream stream = new FileStream("../../../SerializationFile/assembly.xml", FileMode.Create, FileAccess.Write))
             {
-                jsonSerializer.Serialize(assemblyMetadata, stream);
+                serializer.Serialize(assemblyMetadata, stream);
             }
             ChangeSerializeButtonState = false;
             OnPropertyChanged("ChangeSerializeButtonState");
@@ -99,10 +99,10 @@ namespace AdaptiveProgrammingViewModel
         {
             AssemblyView = new AssemblyView();
             string path = DLLFileBrowser.Browse();
-            if (path != null && path.Contains(".json"))
+            if (path != null && path.Contains(".xml"))
             {
                 Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-                assemblyMetadata = jsonSerializer.Deserialize(stream);
+                assemblyMetadata = serializer.Deserialize(stream);
                 AssemblyView.initializeAssembly(assemblyMetadata);
                 lock (AssemblyView)
                 {

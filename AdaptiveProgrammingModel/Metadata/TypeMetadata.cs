@@ -10,20 +10,34 @@ using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
+    [DataContract(IsReference = true)]
     public class TypeMetadata
     {
+        [DataMember]
         private bool isSupplemented;
+        [DataMember]
         private string typeName;
+        [DataMember]
         private string namespaceName;
+        [DataMember]
         private TypeMetadata baseType;
+        [DataMember]
         private List<TypeMetadata> genericArguments;
+        [DataMember]
         private Tuple<AccessLevel, SealedEnum, AbstractEnum> modifiers;
+        [DataMember]
         private TypeKind typeKind;
+        [DataMember]
         private List<TypeMetadata> implementedInterfaces;
+        [DataMember]
         private List<TypeMetadata> nestedTypes;
+        [DataMember]
         private List<PropertyMetadata> properties;
+        [DataMember]
         private TypeMetadata declaringType;
+        [DataMember]
         private List<MethodMetadata> methods;
+        [DataMember]
         private List<MethodMetadata> constructors;
         public bool IsSupplemented
         {

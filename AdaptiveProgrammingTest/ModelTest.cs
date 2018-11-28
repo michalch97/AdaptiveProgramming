@@ -106,5 +106,53 @@ namespace AdaptiveProgrammingTest
                 Assert.AreEqual(assembly.Namespaces[2].NamespaceName, "TPA.ApplicationArchitecture.Presentation");
             }
         }
+
+        [TestMethod]
+        public void XMLSerializationTest()
+        {
+            IDLLSerializer xmlSerializer = new XMLSerializer();
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                xmlSerializer.Serialize(assemblyMetadata, memoryStream);
+                memoryStream.Position = 0;
+                StreamReader reader = new StreamReader(memoryStream);
+                string serializedAssembly = reader.ReadToEnd();
+                StringAssert.Contains(serializedAssembly, "TPA.ApplicationArchitecture.dll");
+                StringAssert.Contains(serializedAssembly, "TPA.ApplicationArchitecture.BusinessLogic");
+                StringAssert.Contains(serializedAssembly, "TPA.ApplicationArchitecture.Data");
+                StringAssert.Contains(serializedAssembly, "TPA.ApplicationArchitecture.Presentation");
+                StringAssert.Contains(serializedAssembly, "Model");
+                StringAssert.Contains(serializedAssembly, "Linq2SQL");
+                StringAssert.Contains(serializedAssembly, "Linq_2_SQL");
+                StringAssert.Contains(serializedAssembly, "get_Linq_2_SQL");
+                StringAssert.Contains(serializedAssembly, "set_Linq_2_SQL");
+                StringAssert.Contains(serializedAssembly, "ToString");
+                StringAssert.Contains(serializedAssembly, "Equals");
+                StringAssert.Contains(serializedAssembly, "GetHashCode");
+                StringAssert.Contains(serializedAssembly, "GetType");
+                StringAssert.Contains(serializedAssembly, "ServiceA");
+                StringAssert.Contains(serializedAssembly, "Service_A");
+                StringAssert.Contains(serializedAssembly, "ServiceB");
+                StringAssert.Contains(serializedAssembly, "Service_B");
+                StringAssert.Contains(serializedAssembly, "ServiceC");
+                StringAssert.Contains(serializedAssembly, "Service_C");
+                StringAssert.Contains(serializedAssembly, "ViewModel");
+                StringAssert.Contains(serializedAssembly, "Connect");
+                StringAssert.Contains(serializedAssembly, "View");
+            }
+        }
+        [TestMethod]
+        public void XMLDeserializationTest()
+        {
+            IDLLSerializer xmlSerializer = new XMLSerializer();
+            using (FileStream fileStream = new FileStream("../../../TestFile/assembly.xml", FileMode.Open))
+            {
+                AssemblyMetadata assembly = xmlSerializer.Deserialize(fileStream);
+                Assert.AreEqual(assembly.AssemblyName, "TPA.ApplicationArchitecture.dll");
+                Assert.AreEqual(assembly.Namespaces[0].NamespaceName, "TPA.ApplicationArchitecture.BusinessLogic");
+                Assert.AreEqual(assembly.Namespaces[1].NamespaceName, "TPA.ApplicationArchitecture.Data");
+                Assert.AreEqual(assembly.Namespaces[2].NamespaceName, "TPA.ApplicationArchitecture.Presentation");
+            }
+        }
     }
 }

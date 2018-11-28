@@ -9,13 +9,20 @@ using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
+    [DataContract(IsReference = true)]
     public class MethodMetadata
     {
+        [DataMember]
         private string name;
+        [DataMember]
         private List<TypeMetadata> genericArguments;
+        [DataMember]
         private Tuple<AccessLevel, AbstractEnum, StaticEnum, VirtualEnum> modifiers;
+        [DataMember]
         private TypeMetadata returnType;
+        [DataMember]
         private bool extension;
+        [DataMember]
         private List<ParameterMetadata> parameters;
         public string Name
         {

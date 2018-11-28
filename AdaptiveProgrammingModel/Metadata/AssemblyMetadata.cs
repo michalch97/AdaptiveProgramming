@@ -8,9 +8,12 @@ using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
+    [DataContract(IsReference = true)]
     public class AssemblyMetadata
     {
+        [DataMember]
         internal string assemblyName;
+        [DataMember]
         internal List<NamespaceMetadata> namespaces;
         public string AssemblyName
         {

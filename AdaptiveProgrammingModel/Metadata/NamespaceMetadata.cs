@@ -7,9 +7,12 @@ using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
+    [DataContract(IsReference = true)]
     public class NamespaceMetadata
     {
+        [DataMember]
         private string namespaceName;
+        [DataMember]
         private List<TypeMetadata> typesMetadata;// = new List<TypeMetadata>();
         private List<Type> tp;// = new List<Type>();
         public string NamespaceName

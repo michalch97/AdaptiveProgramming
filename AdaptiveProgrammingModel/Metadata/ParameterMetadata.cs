@@ -5,9 +5,12 @@ using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
+    [DataContract(IsReference = true)]
     public class ParameterMetadata
     {
+        [DataMember]
         private string name;
+        [DataMember]
         private TypeMetadata typeMetadata;
         public string Name
         {
