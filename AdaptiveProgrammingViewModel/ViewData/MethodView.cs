@@ -41,7 +41,7 @@ namespace AdaptiveProgrammingModel
                     modifiers += "virtual ";
                     break;
             }
-            Name = (methodMetadata.ReturnType == null ? ("(constructor) " + modifiers + className) : ("(method) " + modifiers + methodMetadata.ReturnType.TypeName + " " + methodMetadata.Name)) ;
+            Name = (methodMetadata.ReturnType == null ? ("(constructor) " + modifiers + className) : ("(method) " + modifiers + methodMetadata.ReturnType.TypeName + " " + methodMetadata.Name));
             this.methodMetadata = methodMetadata;
         }
         public override void BuildMyself()
@@ -50,6 +50,9 @@ namespace AdaptiveProgrammingModel
             {
                 Children.Add(new ParameterView(parameterMetadata));
             }
+
+            if (methodMetadata.ReturnType != null && methodMetadata.ReturnType.NamespaceName != "System")
+                Children.Add(new TypeView(methodMetadata.ReturnType));
         }
     }
 }

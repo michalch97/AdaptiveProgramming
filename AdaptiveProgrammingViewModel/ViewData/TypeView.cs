@@ -53,7 +53,6 @@ namespace AdaptiveProgrammingModel
         }
         public override void BuildMyself()
         {
-            //dodać klasy View do interfejsów, atrybutów
             if (typeMetadata.Constructors != null)
             {
                 foreach (MethodMetadata constructorMetadata in typeMetadata.Constructors)
@@ -64,10 +63,6 @@ namespace AdaptiveProgrammingModel
                 {
                     Children.Add(new TypeView(nestedTypeMetadata));
                 }
-                //foreach (TypeMetadata interfaceMetadata in typeMetadata.ImplementedInterfaces)
-                //{
-                //    Children.Add(new TypeView(interfaceMetadata,true));
-                //}
             }
             foreach (MethodMetadata methodMetadata in typeMetadata.Methods)
             {

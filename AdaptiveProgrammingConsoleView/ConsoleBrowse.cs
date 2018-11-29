@@ -8,7 +8,7 @@ namespace AdaptiveProgrammingConsoleView
         public string Browse()
         {
             string path;
-            Console.WriteLine("Get path to DLL/JSON file: ");
+            Console.WriteLine("Get path to DLL/XML file: ");
             path = Console.ReadLine();
             return path;
         }

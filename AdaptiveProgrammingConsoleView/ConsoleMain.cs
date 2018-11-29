@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,12 +12,13 @@ using AdaptiveProgrammingViewModel;
 namespace AdaptiveProgrammingConsoleView
 {
     class ConsoleMain
-    {   
+    {
         private static MainViewModel viewModel;
         private static bool exit;
+
         static void Main(string[] args)
         {
-            TraceAP.InfoLog("Console Application started","ConsoleMain");
+            TraceAP.InfoLog("Console Application started", "ConsoleMain");
             exit = false;
             viewModel = new MainViewModel();
             viewModel.DLLFileBrowser = new ConsoleBrowse();
@@ -51,16 +53,18 @@ namespace AdaptiveProgrammingConsoleView
                         }
                         else
                         {
-                            TraceAP.WarningLog("File load fail!","ConsoleMain");
+                            TraceAP.WarningLog("File load fail!", "ConsoleMain");
                             Console.WriteLine("You have to select file - use \"browse\" ");
                         }
+
                         break;
                     case "expand":
                         Console.WriteLine("Get name to expand: ");
                         string nameToExpand = Console.ReadLine();
                         Expand(nameToExpand);
                         break;
-                    case "fold":Console.WriteLine("Get name to fold: ");
+                    case "fold":
+                        Console.WriteLine("Get name to fold: ");
                         string nameToFold = Console.ReadLine();
                         Fold(nameToFold);
                         break;
@@ -74,7 +78,7 @@ namespace AdaptiveProgrammingConsoleView
                             TraceAP.WarningLog("Serialize fail!", "ConsoleMain");
                             Console.WriteLine("You have to load file - use \"load\" ");
                         }
-                        
+
                         break;
                     case "deserialize":
                         viewModel.Deserialize.Execute(null);
@@ -83,63 +87,52 @@ namespace AdaptiveProgrammingConsoleView
                     case "exit":
                         exit = true;
                         break;
+                    default:
+                        Console.WriteLine("Commands not found!");
+                        break;
                 }
             }
-            TraceAP.InfoLog("Console application finished","ConsoleMain");
+            TraceAP.InfoLog("Console application finished", "ConsoleMain");
         }
 
         private static void Fold(string nameToFold)
         {
             if (viewModel.TreeViewArea[0].Name == nameToFold || viewModel.TreeViewArea[0].IsExpanded)
             {
+                int depth = 0;
                 Console.WriteLine("_________________________________________________________________________");
                 Console.WriteLine(viewModel.TreeViewArea[0].Name);
                 if (viewModel.TreeViewArea[0].Name == nameToFold)
                     viewModel.TreeViewArea[0].IsExpanded = false;
                 if (viewModel.TreeViewArea[0].IsExpanded)
                 {
-                    foreach (TreeViewItem item in viewModel.TreeViewArea[0].Children)
+                    FoldR(nameToFold, viewModel.TreeViewArea[0].Children, depth);
+                }
+            }
+        }
+
+        private static void FoldR(string nameToFold, ObservableCollection<TreeViewItem> item, int depth)
+        {
+            string before = "";
+            for (int j = 0; j < depth; j++)
+            {
+                before += "|  ";
+            }
+
+            before += "|__";
+            foreach (TreeViewItem i in item)
+            {
+                Console.WriteLine(before + i.Name);
+                if (i.Name == nameToFold || i.IsExpanded)
+                {
+                    if (i.Name == nameToFold)
+                        i.IsExpanded = false;
+                    if (i.IsExpanded)
                     {
-                        Console.WriteLine("|__" + item.Name);
-                        if (item.Name == nameToFold || item.IsExpanded)
-                        {
-                            if (item.Name == nameToFold)
-                                item.IsExpanded = false;
-                            if (item.IsExpanded)
-                            {
-                                foreach (TreeViewItem childrenItem in item.Children)
-                                {
-                                    Console.WriteLine("|  |__" + childrenItem.Name);
-                                    if (childrenItem.Name == nameToFold || childrenItem.IsExpanded)
-                                    {
-                                        if (childrenItem.Name == nameToFold)
-                                            childrenItem.IsExpanded = false;
-                                        if (childrenItem.IsExpanded)
-                                        {
-                                            foreach (TreeViewItem childrenChildrenItem in childrenItem.Children)
-                                            {
-                                                Console.WriteLine("|  |  |__" + childrenChildrenItem.Name);
-                                                if (childrenChildrenItem.Name == nameToFold || childrenChildrenItem.IsExpanded)
-                                                {
-                                                    if (childrenChildrenItem.Name == nameToFold)
-                                                        childrenChildrenItem.IsExpanded = false;
-                                                    if (childrenChildrenItem.IsExpanded)
-                                                    {
-                                                        foreach (TreeViewItem childrenChildrenChildrenItem in childrenChildrenItem.Children)
-                                                        {
-                                                            Console.WriteLine("|  |  |  |__" + childrenChildrenChildrenItem.Name);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        depth++;
+                        FoldR(nameToFold, i.Children, depth);
                     }
                 }
-                Console.WriteLine("_________________________________________________________________________");
             }
         }
 
@@ -147,38 +140,33 @@ namespace AdaptiveProgrammingConsoleView
         {
             if (viewModel.TreeViewArea[0].Name == nameToExpand || viewModel.TreeViewArea[0].IsExpanded)
             {
+                int depth = 0;
                 Console.WriteLine("_________________________________________________________________________");
                 Console.WriteLine(viewModel.TreeViewArea[0].Name);
                 viewModel.TreeViewArea[0].IsExpanded = true;
-                foreach (TreeViewItem item in viewModel.TreeViewArea[0].Children)
-                {
-                    Console.WriteLine("|__" + item.Name);
-                    if (item.Name == nameToExpand || item.IsExpanded)
-                    {
-                        item.IsExpanded = true;
-                        foreach (TreeViewItem childrenItem in item.Children)
-                        {
-                            Console.WriteLine("|  |__" + childrenItem.Name);
-                            if (childrenItem.Name == nameToExpand || childrenItem.IsExpanded)
-                            {
-                                childrenItem.IsExpanded = true;
-                                foreach (TreeViewItem childrenChildrenItem in childrenItem.Children)
-                                {
-                                    Console.WriteLine("|  |  |__" + childrenChildrenItem.Name);
-                                    if (childrenChildrenItem.Name == nameToExpand || childrenChildrenItem.IsExpanded)
-                                    {
-                                        childrenChildrenItem.IsExpanded = true;
-                                        foreach (TreeViewItem childrenChildrenChildrenItem in childrenChildrenItem.Children)
-                                        {
-                                            Console.WriteLine("|  |  |  |__" + childrenChildrenChildrenItem.Name);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                ExpandR(nameToExpand, viewModel.TreeViewArea[0].Children, depth);
                 Console.WriteLine("_________________________________________________________________________");
+            }
+
+        }
+
+        private static void ExpandR(string nameToExpand, ObservableCollection<TreeViewItem> item, int depth)
+        {
+            string before = "";
+            for (int j = 0; j < depth; j++)
+            {
+                before += "|  ";
+            }
+            before += "|__";
+            foreach (TreeViewItem i in item)
+            {
+                Console.WriteLine(before + i.Name);
+                if (i.Name == nameToExpand || i.IsExpanded)
+                {
+                    i.IsExpanded = true;
+                    depth++;
+                    ExpandR(nameToExpand, i.Children, depth);
+                }
             }
         }
     }

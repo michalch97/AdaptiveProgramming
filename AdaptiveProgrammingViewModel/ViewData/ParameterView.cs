@@ -10,7 +10,8 @@
         }
         public override void BuildMyself()
         {
-            return;
+            if (parameterMetadata.TypeMetadata.NamespaceName != "System")
+                Children.Add(new TypeView(parameterMetadata.TypeMetadata));
         }
     }
 }

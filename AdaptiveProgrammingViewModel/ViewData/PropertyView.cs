@@ -32,7 +32,7 @@
         }
         public override void BuildMyself()
         {
-            return;
+            Children.Add(new TypeView(propertyMetadata.TypeMetadata));
         }
     }
 }
