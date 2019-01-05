@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using AdaptiveProgrammingData;
 using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
@@ -63,18 +64,6 @@ namespace AdaptiveProgrammingModel
             this.Parameters = EmitParameters(method.GetParameters());
             this.Modifiers = EmitModifiers(method);
             this.Extension = EmitExtension(method);
-        }
-        [JsonConstructor]
-        public MethodMetadata(string name, List<TypeMetadata> genericArguments,
-            Tuple<AccessLevel, AbstractEnum, StaticEnum, VirtualEnum> modifiers, TypeMetadata returnType,
-            bool extension, List<ParameterMetadata> parameters)
-        {
-            this.Name = name;
-            this.GenericArguments = genericArguments;
-            this.Modifiers = modifiers;
-            this.ReturnType = returnType;
-            this.Extension = extension;
-            this.Parameters = parameters;
         }
 
         private static List<ParameterMetadata> EmitParameters(IEnumerable<ParameterInfo> parms)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using AdaptiveProgrammingData;
 using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
@@ -33,7 +34,6 @@ namespace AdaptiveProgrammingModel
             private set { this.modifiers = value; }
         }
 
-        [JsonConstructor]
         public PropertyMetadata(string name, TypeMetadata typeMetadata,
             Tuple<AccessLevel, SealedEnum, AbstractEnum> modifiers)
         {

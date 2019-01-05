@@ -6,6 +6,7 @@ using System.Net.Configuration;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using AdaptiveProgrammingData;
 using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
@@ -168,27 +169,6 @@ namespace AdaptiveProgrammingModel
             this.Properties = PropertyMetadata.EmitProperties(type.GetProperties());
             this.TypeKind = GetTypeKind(type);
             this.IsSupplemented = true;
-        }
-        [JsonConstructor]
-        public TypeMetadata(bool isSupplemented, string typeName, string namespaceName, TypeMetadata baseType,
-            List<TypeMetadata> genericArguments, Tuple<AccessLevel, SealedEnum, AbstractEnum> modifiers,
-            TypeKind typeKind, List<TypeMetadata> implementedInterfaces,
-            List<TypeMetadata> nestedTypes, List<PropertyMetadata> properties, TypeMetadata declaringType,
-            List<MethodMetadata> methods, List<MethodMetadata> constructors)
-        {
-            this.IsSupplemented = isSupplemented;
-            this.TypeName = typeName;
-            this.NamespaceName = namespaceName;
-            this.BaseType = baseType;
-            this.GenericArguments = genericArguments;
-            this.Modifiers = modifiers;
-            this.TypeKind = typeKind;
-            this.ImplementedInterfaces = implementedInterfaces;
-            this.NestedTypes = nestedTypes;
-            this.Properties = properties;
-            this.DeclaringType = declaringType;
-            this.Methods = methods;
-            this.Constructors = constructors;
         }
         public static TypeMetadata EmitReference(Type type)
         {

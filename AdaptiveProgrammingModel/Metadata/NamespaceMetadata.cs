@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using AdaptiveProgrammingData;
 using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
@@ -54,17 +55,10 @@ namespace AdaptiveProgrammingModel
                 }
             }
         }
-        
-        [JsonConstructor]
-        public NamespaceMetadata(string namespaceName, List<TypeMetadata> typesMetadata, IEnumerable<string> tp)
+
+        public ISerializableNamespace GetSerializableNamespace()
         {
-            Tp = new List<Type>();
-            this.NamespaceName = namespaceName;
-            this.TypesMetadata = typesMetadata;
-            foreach (string s in tp)
-            {
-                Tp.Add(Type.GetType(s));
-            }
+            
         }
     }
 }

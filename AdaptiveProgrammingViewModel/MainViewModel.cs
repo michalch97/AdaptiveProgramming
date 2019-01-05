@@ -1,10 +1,13 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using System.Windows.Input;
+using AdaptiveProgrammingData;
 using AdaptiveProgrammingModel;
 using AdaptiveProgrammingViewModel.Annotations;
 
@@ -13,6 +16,7 @@ namespace AdaptiveProgrammingViewModel
     public class MainViewModel : INotifyPropertyChanged
     {
         public AssemblyMetadata assemblyMetadata;
+        public ISerializableAssembly serializableAssembly;
         public AssemblyView AssemblyView { get; set; }
         public IDLLSerializer serializer;
         public ObservableCollection<TreeViewItem> TreeViewArea { get; set; }
@@ -40,7 +44,6 @@ namespace AdaptiveProgrammingViewModel
         {
             TreeViewArea = new ObservableCollection<TreeViewItem>();
             AssemblyView assemblyView = new AssemblyView();
-            //jsonSerializer = new JSONSerializer();
             serializer = new XMLSerializer();
             ChangeLoadButtonState = false;
             OnPropertyChanged("ChangeLoadButtonState");
@@ -87,10 +90,7 @@ namespace AdaptiveProgrammingViewModel
 
         public void SerializeFile()
         {
-            using (Stream stream = new FileStream("../../../SerializationFile/assembly.xml", FileMode.Create, FileAccess.Write))
-            {
-                serializer.Serialize(assemblyMetadata, stream);
-            }
+            serializer.Serialize(assemblyMetadata);
             ChangeSerializeButtonState = false;
             OnPropertyChanged("ChangeSerializeButtonState");
         }
@@ -98,24 +98,16 @@ namespace AdaptiveProgrammingViewModel
         public void DeserializeFile()
         {
             AssemblyView = new AssemblyView();
-            string path = DLLFileBrowser.Browse();
-            if (path != null && path.Contains(".xml"))
+            assemblyMetadata = serializer.Deserialize<AssemblyMetadata>();
+            AssemblyView.initializeAssembly(assemblyMetadata);
+            lock (AssemblyView)
             {
-                Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-                assemblyMetadata = serializer.Deserialize(stream);
-                AssemblyView.initializeAssembly(assemblyMetadata);
-                lock (AssemblyView)
-                {
-                    TreeViewArea.Clear();
-                    TreeViewArea.Add(AssemblyView);
-                }
-                ChangeLoadButtonState = false;
-                OnPropertyChanged("ChangeLoadButtonState");
+                TreeViewArea.Clear();
+                TreeViewArea.Add(AssemblyView);
             }
-            else
-            {
-                return;
-            }
+            ChangeLoadButtonState = false;
+            OnPropertyChanged("ChangeLoadButtonState");
+
         }
     }
 }

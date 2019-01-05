@@ -1,4 +1,6 @@
-﻿namespace AdaptiveProgrammingModel
+﻿using AdaptiveProgrammingData.Enum;
+
+namespace AdaptiveProgrammingModel
 {
     public class PropertyView : TreeViewItem
     {

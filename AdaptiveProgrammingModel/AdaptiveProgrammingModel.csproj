@@ -47,27 +47,23 @@
   <ItemGroup>
     <Compile Include="AssemblyLoader.cs" />
     <Compile Include="Metadata\AssemblyMetadata.cs" />
-    <Compile Include="Enum\AbstractEnum.cs" />
-    <Compile Include="Enum\AccessLevel.cs" />
-    <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="IDLLSerializer.cs" />
-    <Compile Include="JSONSerializer.cs" />
+    <Compile Include="Metadata\ExtensionMethods.cs" />
     <Compile Include="Metadata\MethodMetadata.cs" />
     <Compile Include="Metadata\NamespaceMetadata.cs" />
     <Compile Include="Metadata\ParameterMetadata.cs" />
     <Compile Include="Metadata\PropertyMetadata.cs" />
-    <Compile Include="Enum\SealedEnum.cs" />
-    <Compile Include="Enum\StaticEnum.cs" />
-    <Compile Include="Enum\TypeKind.cs" />
     <Compile Include="Metadata\TypeMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Enum\VirtualEnum.cs" />
     <Compile Include="TraceAP.cs" />
-    <Compile Include="XMLSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\AdaptiveProgrammingData\AdaptiveProgrammingData.csproj">
+      <Project>{9b6cb902-39b4-404f-b657-1ce3aaef85e7}</Project>
+      <Name>AdaptiveProgrammingData</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

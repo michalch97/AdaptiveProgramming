@@ -1,19 +1,18 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using AdaptiveProgrammingData;
 using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
-    [DataContract(IsReference = true)]
     public class AssemblyMetadata
     {
-        [DataMember]
         internal string assemblyName;
-        [DataMember]
         internal List<NamespaceMetadata> namespaces;
         public string AssemblyName
         {
@@ -35,13 +34,6 @@ namespace AdaptiveProgrammingModel
                          into g
                           orderby g.Key
                           select new NamespaceMetadata(g.Key, g)).ToList();
-        }
-
-        [JsonConstructor]
-        public AssemblyMetadata(String assemblyName, List<NamespaceMetadata> namespaces)
-        {
-            this.AssemblyName = assemblyName;
-            this.Namespaces = namespaces;
         }
     }
 }

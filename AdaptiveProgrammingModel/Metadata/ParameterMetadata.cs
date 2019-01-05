@@ -23,7 +23,6 @@ namespace AdaptiveProgrammingModel
             private set { this.typeMetadata = value; }
         }
 
-        [JsonConstructor]
         public ParameterMetadata(string name, TypeMetadata typeMetadata)
         {
             this.Name = name;
