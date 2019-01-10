@@ -6,34 +6,48 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using AdaptiveProgrammingData;
+using AdaptiveProgrammingData.Bases;
 using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
-    public class AssemblyMetadata
+    public class AssemblyMetadata : AssemblyBase
     {
-        internal string assemblyName;
-        internal List<NamespaceMetadata> namespaces;
-        public string AssemblyName
-        {
-            get { return assemblyName; }
-            private set { this.assemblyName = value; }
-        }
-        public List<NamespaceMetadata> Namespaces
-        {
-            get { return namespaces; }
-            private set { this.namespaces = value; }
-        }
+        public override string AssemblyName { get; set; }
+        public override List<NamespaceBase> Namespaces { get; set; }
 
         public AssemblyMetadata(Assembly assembly)
         {
             AssemblyName = assembly.ManifestModule.Name;
-            Namespaces = (from Type t in assembly.GetTypes()
-                              //where t.GetVisible()
-                          group t by t.GetNamespace()
-                         into g
-                          orderby g.Key
-                          select new NamespaceMetadata(g.Key, g)).ToList();
+            Namespaces = new List<NamespaceBase>();
+            List<NamespaceMetadata> n = (from Type t in assembly.GetTypes()
+                //where t.GetVisible()
+                group t by t.GetNamespace()
+                into g
+                orderby g.Key
+                select new NamespaceMetadata(g.Key, g)).ToList();
+            foreach (NamespaceMetadata nm in n)
+            {
+                Namespaces.Add(nm);
+            }
+            //Namespaces = (from Type t in assembly.GetTypes()
+            //                  //where t.GetVisible()
+            //              group t by t.GetNamespace()
+            //             into g
+            //              orderby g.Key
+            //              select new NamespaceMetadata(g.Key, g)).ToList();
+        }
+
+        public AssemblyMetadata(AssemblyBase assemblyBase)
+        {
+            Namespaces = new List<NamespaceBase>();
+            BaseDictionary.typeDictionary.Clear();
+            BaseDictionary.propertyDictionary.Clear();
+            AssemblyName = assemblyBase.AssemblyName;
+            foreach (NamespaceBase namespaceBase in assemblyBase.Namespaces)
+            {
+                Namespaces.Add(new NamespaceMetadata(namespaceBase));
+            }
         }
     }
 }

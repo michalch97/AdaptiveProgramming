@@ -7,150 +7,33 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using AdaptiveProgrammingData;
+using AdaptiveProgrammingData.Bases;
 using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
-    [DataContract(IsReference = true)]
-    public class TypeMetadata
+    public class TypeMetadata : TypeBase
     {
-        [DataMember]
-        private bool isSupplemented;
-        [DataMember]
-        private string typeName;
-        [DataMember]
-        private string namespaceName;
-        [DataMember]
-        private TypeMetadata baseType;
-        [DataMember]
-        private List<TypeMetadata> genericArguments;
-        [DataMember]
-        private Tuple<AccessLevel, SealedEnum, AbstractEnum> modifiers;
-        [DataMember]
-        private TypeKind typeKind;
-        [DataMember]
-        private List<TypeMetadata> implementedInterfaces;
-        [DataMember]
-        private List<TypeMetadata> nestedTypes;
-        [DataMember]
-        private List<PropertyMetadata> properties;
-        [DataMember]
-        private TypeMetadata declaringType;
-        [DataMember]
-        private List<MethodMetadata> methods;
-        [DataMember]
-        private List<MethodMetadata> constructors;
-        public bool IsSupplemented
-        {
-            get
-            {
-                return this.isSupplemented;
-            }
-            private set { this.isSupplemented = value; }
-        }
-        public string TypeName
-        {
-            get
-            {
-                return this.typeName;
-            }
-            private set { this.typeName = value; }
-        }
-        public string NamespaceName
-        {
-            get
-            {
-                return this.namespaceName;
-            }
-            private set { this.namespaceName = value; }
-        }
-        public TypeMetadata BaseType
-        {
-            get
-            {
-                return this.baseType;
-            }
-            private set { this.baseType = value; }
-        }
-        public List<TypeMetadata> GenericArguments
-        {
-            get
-            {
-                return this.genericArguments;
-            }
-            private set { this.genericArguments = value; }
-        }
-        public Tuple<AccessLevel, SealedEnum, AbstractEnum> Modifiers
-        {
-            get
-            {
-                return this.modifiers;
-            }
-            private set { this.modifiers = value; }
-        }
-        public TypeKind TypeKind
-        {
-            get
-            {
-                return this.typeKind;
-            }
-            private set { this.typeKind = value; }
-        }
-        public List<TypeMetadata> ImplementedInterfaces
-        {
-            get
-            {
-                return this.implementedInterfaces;
-            }
-            private set { this.implementedInterfaces = value; }
-        }
-        public List<TypeMetadata> NestedTypes
-        {
-            get
-            {
-                return this.nestedTypes;
-            }
-            private set { this.nestedTypes = value; }
-        }
-        public List<PropertyMetadata> Properties
-        {
-            get
-            {
-                return this.properties;
-            }
-            private set { this.properties = value; }
-        }
-        public TypeMetadata DeclaringType
-        {
-            get
-            {
-                return this.declaringType;
-            }
-            private set { this.declaringType = value; }
-        }
-        public List<MethodMetadata> Methods
-        {
-            get
-            {
-                return this.methods;
-            }
-            private set { this.methods = value; }
-        }
-        public List<MethodMetadata> Constructors
-        {
-            get
-            {
-                return this.constructors;
-            }
-            private set { this.constructors = value; }
-        }
+        public bool IsSupplemented { get; set; }
+        public override string TypeName { get; set; }
+        public override string NamespaceName { get; set; }
+        public override TypeBase BaseType { get; set; }
+        public override List<TypeBase> GenericArguments { get; set; }
+        public override Tuple<AccessLevel, SealedEnum, AbstractEnum> Modifiers { get; set; }
+        public override TypeKind TypeKind { get; set; }
+        public override List<TypeBase> ImplementedInterfaces { get; set; }
+        public override List<TypeBase> NestedTypes { get; set; }
+        public override List<PropertyBase> Properties { get; set; }
+        public override TypeBase DeclaringType { get; set; }
+        public override List<MethodBase> Methods { get; set; }
+        public override List<MethodBase> Constructors { get; set; }
         private TypeMetadata(string typeName, string namespaceName)
         {
             this.TypeName = typeName;
             this.NamespaceName = namespaceName;
             this.IsSupplemented = false;
         }
-        private TypeMetadata(string typeName, string namespaceName, List<TypeMetadata> genericArguments) : this(typeName, namespaceName)
+        private TypeMetadata(string typeName, string namespaceName, List<TypeBase> genericArguments) : this(typeName, namespaceName)
         {
             this.GenericArguments = genericArguments;
         }
@@ -170,7 +53,172 @@ namespace AdaptiveProgrammingModel
             this.TypeKind = GetTypeKind(type);
             this.IsSupplemented = true;
         }
-        public static TypeMetadata EmitReference(Type type)
+
+        public TypeMetadata(TypeBase typeBase)
+        {
+            TypeName = typeBase.TypeName;
+            NamespaceName = typeBase.NamespaceName;
+            TypeKind = typeBase.TypeKind;
+            Modifiers = typeBase.Modifiers;
+            GetBaseType(typeBase);
+            GetDeclaringType(typeBase);
+            try
+            {
+                BaseDictionary.typeDictionary.Add(TypeName, this);
+            }
+            catch (ArgumentException)
+            {
+
+            }
+            Properties = new List<PropertyBase>();
+            FillProperties(typeBase);
+            Constructors = new List<MethodBase>();
+            FillConstructors(typeBase);
+            Methods = new List<MethodBase>();
+            FillMethods(typeBase);
+            GenericArguments = new List<TypeBase>();
+            FillGenericArguments(typeBase);
+            NestedTypes = new List<TypeBase>();
+            FillNestedTypes(typeBase);
+            ImplementedInterfaces = new List<TypeBase>();
+            FillImplementedInterfaces(typeBase);
+        }
+
+        private void FillImplementedInterfaces(TypeBase typeBase)
+        {
+            if (typeBase.ImplementedInterfaces != null)
+            {
+                foreach (TypeBase type in typeBase.ImplementedInterfaces)
+                {
+                    if (BaseDictionary.typeDictionary.ContainsKey(type.TypeName))
+                    {
+                        ImplementedInterfaces.Add(BaseDictionary.typeDictionary[type.TypeName]);
+                    }
+                    else
+                    {
+                        ImplementedInterfaces.Add(new TypeMetadata(type));
+                    }
+                }
+            }
+        }
+
+        private void FillNestedTypes(TypeBase typeBase)
+        {
+            if (typeBase.NestedTypes != null)
+            {
+                foreach (TypeBase type in typeBase.NestedTypes)
+                {
+                    if (BaseDictionary.typeDictionary.ContainsKey(type.TypeName))
+                    {
+                        NestedTypes.Add(BaseDictionary.typeDictionary[type.TypeName]);
+                    }
+                    else
+                    {
+                        NestedTypes.Add(new TypeMetadata(type));
+                    }
+                }
+            }
+        }
+
+        private void FillGenericArguments(TypeBase typeBase)
+        {
+            if (typeBase.GenericArguments != null)
+            {
+                foreach (TypeBase type in typeBase.GenericArguments)
+                {
+                    if (BaseDictionary.typeDictionary.ContainsKey(type.TypeName))
+                    {
+                        GenericArguments.Add(BaseDictionary.typeDictionary[type.TypeName]);
+                    }
+                    else
+                    {
+                        GenericArguments.Add(new TypeMetadata(type));
+                    }
+                }
+            }
+        }
+
+        private void FillMethods(TypeBase typeBase)
+        {
+            if (typeBase.Methods != null)
+            {
+                foreach (MethodBase method in typeBase.Methods)
+                {
+                    Methods.Add(new MethodMetadata(method));
+                }
+            }
+        }
+
+        private void FillConstructors(TypeBase typeBase)
+        {
+            if (typeBase.Constructors != null)
+            {
+                foreach (MethodBase constructor in typeBase.Constructors)
+                {
+                    Constructors.Add(new MethodMetadata(constructor));
+                }
+            }
+        }
+
+        private void FillProperties(TypeBase typeBase)
+        {
+            if (typeBase.Properties != null)
+            {
+                foreach (PropertyBase properties in typeBase.Properties)
+                {
+                    if (BaseDictionary.propertyDictionary.ContainsKey(properties.Name))
+                    {
+                        Properties.Add(BaseDictionary.propertyDictionary[properties.Name]);
+                    }
+                    else
+                    {
+                        BaseDictionary.propertyDictionary.Add(properties.Name, null);
+                        PropertyBase newProperty = new PropertyMetadata(properties);
+                        Properties.Add(newProperty);
+                        BaseDictionary.propertyDictionary[newProperty.Name] = newProperty;
+                    }
+                }
+            }
+        }
+
+        private void GetBaseType(TypeBase typeBase)
+        {
+            if (typeBase.BaseType != null)
+            {
+                if (BaseDictionary.typeDictionary.ContainsKey(typeBase.BaseType.TypeName))
+                {
+                    BaseType = BaseDictionary.typeDictionary[typeBase.BaseType.TypeName];
+                }
+                else
+                {
+                    BaseType = new TypeMetadata(typeBase.BaseType);
+                }
+            }
+            else
+            {
+                BaseType = null;
+            }
+        }
+
+        private void GetDeclaringType(TypeBase typeBase)
+        {
+            if (typeBase.DeclaringType != null)
+            {
+                if (BaseDictionary.typeDictionary.ContainsKey(typeBase.DeclaringType.TypeName))
+                {
+                    DeclaringType = BaseDictionary.typeDictionary[typeBase.DeclaringType.TypeName];
+                }
+                else
+                {
+                    DeclaringType = new TypeMetadata(typeBase.DeclaringType);
+                }
+            }
+            else
+            {
+                DeclaringType = null;
+            }
+        }
+        public static TypeBase EmitReference(Type type)
         {
             if (!type.IsGenericType)
             {
@@ -208,7 +256,7 @@ namespace AdaptiveProgrammingModel
             typeMetadata.TypeKind = GetTypeKind(type);
             typeMetadata.IsSupplemented = true;
         }
-        public static List<TypeMetadata> EmitGenericArguments(IEnumerable<Type> arguments)
+        public static List<TypeBase> EmitGenericArguments(IEnumerable<Type> arguments)
         {
             return (from Type argument in arguments select EmitReference(argument)).ToList();
         }
@@ -216,19 +264,29 @@ namespace AdaptiveProgrammingModel
         {
             return this.IsSupplemented;
         }
-        private static TypeMetadata EmitDeclaringType(Type declaringType)
+        private static TypeBase EmitDeclaringType(Type declaringType)
         {
             if (declaringType == null)
                 return null;
             return EmitReference(declaringType);
         }
-        private static List<TypeMetadata> EmitNestedTypes(IEnumerable<Type> nestedTypes)
+        private static List<TypeBase> EmitNestedTypes(IEnumerable<Type> nestedTypes)
         {
-            return (from type in nestedTypes
-                    where type.GetVisible()
-                    select new TypeMetadata(type)).ToList();
+            List<TypeMetadata> typeMetadatas = (from type in nestedTypes
+                where type.GetVisible()
+                select new TypeMetadata(type)).ToList();
+            List<TypeBase> typeBases = new List<TypeBase>();
+            foreach (TypeMetadata type in typeMetadatas)
+            {
+                typeBases.Add(type);
+            }
+
+            return typeBases;
+            //return (from type in nestedTypes
+            //        where type.GetVisible()
+            //        select new TypeMetadata(type)).ToList();
         }
-        private static List<TypeMetadata> EmitImplements(IEnumerable<Type> interfaces)
+        private static List<TypeBase> EmitImplements(IEnumerable<Type> interfaces)
         {
             return (from currentInterface in interfaces
                     select EmitReference(currentInterface)).ToList();
@@ -240,7 +298,7 @@ namespace AdaptiveProgrammingModel
                 type.IsInterface ? TypeKind.InterfaceType :
                 TypeKind.ClassType;
         }
-        private static TypeMetadata EmitExtends(Type baseType)
+        private static TypeBase EmitExtends(Type baseType)
         {
             if (baseType == null || baseType == typeof(Object) || baseType == typeof(ValueType) || baseType == typeof(Enum))
                 return null;

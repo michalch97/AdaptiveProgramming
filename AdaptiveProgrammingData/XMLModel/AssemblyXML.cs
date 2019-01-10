@@ -12,5 +12,17 @@ namespace AdaptiveProgrammingData
         public override string AssemblyName { get; set; }
         [DataMember]
         public override List<NamespaceBase> Namespaces { get; set; }
+
+        public AssemblyXML(AssemblyBase assemblyBase)
+        {
+            BaseDictionary.typeDictionary.Clear();
+            BaseDictionary.propertyDictionary.Clear();
+            AssemblyName = assemblyBase.AssemblyName;
+            Namespaces = new List<NamespaceBase>();
+            foreach (NamespaceBase namespaceBase in assemblyBase.Namespaces)
+            {
+                Namespaces.Add(new NamespaceXML(namespaceBase));
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
-using AdaptiveProgrammingData.Enum;
+using AdaptiveProgrammingData;
+using AdaptiveProgrammingData.Bases;
 
 namespace AdaptiveProgrammingModel
 {

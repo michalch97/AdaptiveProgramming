@@ -6,55 +6,21 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using AdaptiveProgrammingData;
+using AdaptiveProgrammingData.Bases;
 using Newtonsoft.Json;
+using MethodBase = System.Reflection.MethodBase;
 
 namespace AdaptiveProgrammingModel
 {
     [DataContract(IsReference = true)]
-    public class MethodMetadata
+    public class MethodMetadata : AdaptiveProgrammingData.Bases.MethodBase
     {
-        [DataMember]
-        private string name;
-        [DataMember]
-        private List<TypeMetadata> genericArguments;
-        [DataMember]
-        private Tuple<AccessLevel, AbstractEnum, StaticEnum, VirtualEnum> modifiers;
-        [DataMember]
-        private TypeMetadata returnType;
-        [DataMember]
-        private bool extension;
-        [DataMember]
-        private List<ParameterMetadata> parameters;
-        public string Name
-        {
-            get { return this.name; }
-            private set { this.name = value; }
-        }
-        public List<TypeMetadata> GenericArguments
-        {
-            get { return this.genericArguments; }
-            private set { this.genericArguments = value; }
-        }
-        public Tuple<AccessLevel, AbstractEnum, StaticEnum, VirtualEnum> Modifiers
-        {
-            get { return this.modifiers; }
-            private set { this.modifiers = value; }
-        }
-        public TypeMetadata ReturnType
-        {
-            get { return this.returnType; }
-            private set { this.returnType = value; }
-        }
-        public bool Extension
-        {
-            get { return this.extension; }
-            private set { this.extension = value; }
-        }
-        public List<ParameterMetadata> Parameters
-        {
-            get { return this.parameters; }
-            private set { this.parameters = value; }
-        }
+        public override string Name { get; set; }
+        public override List<TypeBase> GenericArguments { get; set; }
+        public override Tuple<AccessLevel, AbstractEnum, StaticEnum, VirtualEnum> Modifiers { get; set; }
+        public override TypeBase ReturnType { get; set; }
+        public override bool Extension { get; set; }
+        public override List<ParameterBase> Parameters { get; set; }
 
         private MethodMetadata(MethodBase method)
         {
@@ -66,12 +32,82 @@ namespace AdaptiveProgrammingModel
             this.Extension = EmitExtension(method);
         }
 
-        private static List<ParameterMetadata> EmitParameters(IEnumerable<ParameterInfo> parms)
+        public MethodMetadata(AdaptiveProgrammingData.Bases.MethodBase methodBase)
         {
-            return (from parm in parms
-                    select new ParameterMetadata(parm.Name, TypeMetadata.EmitReference(parm.ParameterType))).ToList();
+            Name = methodBase.Name;
+            Extension = methodBase.Extension;
+
+            if (methodBase.Modifiers != null)
+            {
+                Modifiers = methodBase.Modifiers;
+            }
+
+            GetReurnType(methodBase);
+            FillGenericArguments(methodBase);
+            FillParameters(methodBase);
+
         }
-        private static TypeMetadata EmitReturnType(MethodBase method)
+
+        private void FillParameters(AdaptiveProgrammingData.Bases.MethodBase methodBase)
+        {
+            Parameters = new List<ParameterBase>();
+            if (methodBase.Parameters != null)
+            {
+                foreach (ParameterBase parameter in methodBase.Parameters)
+                {
+                    Parameters.Add(new ParameterMetadata(parameter));
+                }
+            }
+        }
+
+        private void FillGenericArguments(AdaptiveProgrammingData.Bases.MethodBase methodBase)
+        {
+            if (methodBase.GenericArguments != null)
+            {
+                foreach (TypeBase arg in methodBase.GenericArguments)
+                {
+                    if (BaseDictionary.typeDictionary.ContainsKey(arg.TypeName))
+                    {
+                        GenericArguments.Add(BaseDictionary.typeDictionary[arg.TypeName]);
+                    }
+                    else
+                    {
+                        GenericArguments.Add(new TypeMetadata(arg));
+                    }
+                }
+            }
+        }
+
+        private void GetReurnType(AdaptiveProgrammingData.Bases.MethodBase methodBase)
+        {
+            if (methodBase.ReturnType != null)
+            {
+                if (BaseDictionary.typeDictionary.ContainsKey(methodBase.ReturnType.TypeName))
+                {
+                    ReturnType = BaseDictionary.typeDictionary[methodBase.ReturnType.TypeName];
+                }
+                else
+                {
+                    ReturnType = new TypeMetadata(methodBase.ReturnType);
+                }
+            }
+        }
+
+        private static List<ParameterBase> EmitParameters(IEnumerable<ParameterInfo> parms)
+        {
+            List<ParameterMetadata> parameterMetadatas = (from parm in parms
+                select new ParameterMetadata(parm.Name, TypeMetadata.EmitReference(parm.ParameterType))).ToList();
+            List<ParameterBase> parameterBases = new List<ParameterBase>();
+            foreach (ParameterMetadata parameter in parameterMetadatas)
+            {
+                parameterBases.Add(parameter);
+            }
+
+            return parameterBases;
+            //return (from parm in parms
+            //        select new ParameterMetadata(parm.Name, TypeMetadata.EmitReference(parm.ParameterType))).ToList();
+        }
+        private static TypeBase EmitReturnType(MethodBase method)
         {
             MethodInfo methodInfo = method as MethodInfo;
             if (methodInfo == null)
@@ -102,11 +138,18 @@ namespace AdaptiveProgrammingModel
                 _virtual = VirtualEnum.Virtual;
             return new Tuple<AccessLevel, AbstractEnum, StaticEnum, VirtualEnum>(_access, _abstract, _static, _virtual);
         }
-        public static List<MethodMetadata> EmitMethods(IEnumerable<MethodBase> methods)
+        public static List<AdaptiveProgrammingData.Bases.MethodBase> EmitMethods(IEnumerable<MethodBase> methods)
         {
-            return (from MethodBase _currentMethod in methods
-                    where _currentMethod.GetVisible()
-                    select new MethodMetadata(_currentMethod)).ToList();
+            List<MethodMetadata> methodMetadatas = (from MethodBase _currentMethod in methods
+                where _currentMethod.GetVisible()
+                select new MethodMetadata(_currentMethod)).ToList();
+            List<AdaptiveProgrammingData.Bases.MethodBase> methodBases = new List<AdaptiveProgrammingData.Bases.MethodBase>();
+            foreach (MethodMetadata method in methodMetadatas)
+            {
+                methodBases.Add(method);
+            }
+
+            return methodBases;
         }
     }
 }

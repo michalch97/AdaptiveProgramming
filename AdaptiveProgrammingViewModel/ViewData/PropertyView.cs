@@ -1,4 +1,4 @@
-﻿using AdaptiveProgrammingData.Enum;
+﻿using AdaptiveProgrammingData;
 
 namespace AdaptiveProgrammingModel
 {
@@ -29,12 +29,12 @@ namespace AdaptiveProgrammingModel
                     before += "abstract ";
                     break;
             }
-            Name = "(property) " + before + propertyMetadata.TypeMetadata.TypeName + " " + propertyMetadata.Name;
+            Name = "(property) " + before + propertyMetadata.Type.TypeName + " " + propertyMetadata.Name;
             this.propertyMetadata = propertyMetadata;
         }
         public override void BuildMyself()
         {
-            Children.Add(new TypeView(propertyMetadata.TypeMetadata));
+            Children.Add(new TypeView((TypeMetadata)propertyMetadata.Type));
         }
     }
 }

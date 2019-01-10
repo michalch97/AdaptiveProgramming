@@ -4,28 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using AdaptiveProgrammingData;
+using AdaptiveProgrammingData.Bases;
 using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
-    [DataContract(IsReference = true)]
-    public class NamespaceMetadata
+    public class NamespaceMetadata : NamespaceBase
     {
-        [DataMember]
-        private string namespaceName;
-        [DataMember]
-        private List<TypeMetadata> typesMetadata;// = new List<TypeMetadata>();
         private List<Type> tp;// = new List<Type>();
-        public string NamespaceName
-        {
-            get { return this.namespaceName; }
-            private set { this.namespaceName = value; }
-        }
-        public List<TypeMetadata> TypesMetadata
-        {
-            get { return this.typesMetadata; }
-            private set { this.typesMetadata = value; }
-        }
+        public override string NamespaceName { get; set; }
+        public override List<TypeBase> Types { get; set; }
 
         public List<Type> Tp
         {
@@ -35,7 +23,7 @@ namespace AdaptiveProgrammingModel
 
         public NamespaceMetadata(string namespaceName, IEnumerable<Type> types)
         {
-            TypesMetadata = new List<TypeMetadata>();
+            Types = new List<TypeBase>();
             this.NamespaceName = namespaceName;
             this.Tp = (from type in types orderby type.Name select type).ToList();
             foreach (Type type in Tp)
@@ -44,21 +32,26 @@ namespace AdaptiveProgrammingModel
                 if (firsTime)
                 {
                     TypeMetadata newTypeMetadata = new TypeMetadata(type);
-                    TypesMetadata.Add(newTypeMetadata);
+                    Types.Add(newTypeMetadata);
                     AssemblyLoader.loadedTypes.Add(id, newTypeMetadata);
                 }
                 else
                 {
                     AssemblyLoader.loadedTypes.TryGetValue(id, out TypeMetadata loadedTypeMetadata);
                     TypeMetadata.FillInTypeMetadata(type,loadedTypeMetadata);
-                    TypesMetadata.Add(loadedTypeMetadata);
+                    Types.Add(loadedTypeMetadata);
                 }
             }
         }
 
-        public ISerializableNamespace GetSerializableNamespace()
+        public NamespaceMetadata(NamespaceBase namespaceBase)
         {
-            
+            Types = new List<TypeBase>();
+            NamespaceName = namespaceBase.NamespaceName;
+            foreach (TypeBase type in namespaceBase.Types)
+            {
+                Types.Add(new TypeMetadata(type));
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using AdaptiveProgrammingData.Bases;
 
 namespace AdaptiveProgrammingModel
 {
@@ -13,7 +14,7 @@ namespace AdaptiveProgrammingModel
         }
         public override void BuildMyself()
         {
-            foreach (TypeMetadata typeMetadata in namespaceMetadata.TypesMetadata)
+            foreach (TypeMetadata typeMetadata in namespaceMetadata.Types)
             {
                 Children.Add(new TypeView(typeMetadata));
             }

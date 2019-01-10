@@ -1,5 +1,5 @@
 ﻿using System;
-using AdaptiveProgrammingData.Enum;
+using AdaptiveProgrammingData;
 
 namespace AdaptiveProgrammingModel
 {
@@ -53,7 +53,7 @@ namespace AdaptiveProgrammingModel
             }
 
             if (methodMetadata.ReturnType != null && methodMetadata.ReturnType.NamespaceName != "System")
-                Children.Add(new TypeView(methodMetadata.ReturnType));
+                Children.Add(new TypeView((TypeMetadata)methodMetadata.ReturnType));
         }
     }
 }

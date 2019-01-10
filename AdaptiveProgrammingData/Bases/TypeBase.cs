@@ -8,8 +8,6 @@ namespace AdaptiveProgrammingData.Bases
     public abstract class TypeBase
     {
         [DataMember]
-        public virtual bool IsSupplemented { get; set; }
-        [DataMember]
         public virtual string TypeName { get; set; }
         [DataMember]
         public virtual string NamespaceName { get; set; }

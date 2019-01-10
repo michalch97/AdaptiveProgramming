@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseDictionary.cs" />
     <Compile Include="Bases\AssemblyBase.cs" />
     <Compile Include="Bases\MethodBase.cs" />
     <Compile Include="Bases\NamespaceBase.cs" />

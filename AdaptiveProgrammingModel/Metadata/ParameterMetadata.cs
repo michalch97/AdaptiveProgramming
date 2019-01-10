@@ -1,32 +1,34 @@
 ﻿using System;
 using System.CodeDom;
 using System.Runtime.Serialization;
+using AdaptiveProgrammingData;
+using AdaptiveProgrammingData.Bases;
 using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
     [DataContract(IsReference = true)]
-    public class ParameterMetadata
+    public class ParameterMetadata : ParameterBase
     {
-        [DataMember]
-        private string name;
-        [DataMember]
-        private TypeMetadata typeMetadata;
-        public string Name
-        {
-            get { return this.name; }
-            private set { this.name = value; }
-        }
-        public TypeMetadata TypeMetadata
-        {
-            get { return this.typeMetadata; }
-            private set { this.typeMetadata = value; }
-        }
+        public override string Name { get; set; }
+        public override TypeBase Type { get; set; }
 
-        public ParameterMetadata(string name, TypeMetadata typeMetadata)
+        public ParameterMetadata(string name, TypeBase typeMetadata)
         {
             this.Name = name;
-            this.TypeMetadata = typeMetadata;
+            this.Type = typeMetadata;
+        }
+        public ParameterMetadata(ParameterBase parameterBase)
+        {
+            Name = parameterBase.Name;
+            if (BaseDictionary.typeDictionary.ContainsKey(parameterBase.Type.TypeName))
+            {
+                Type = BaseDictionary.typeDictionary[parameterBase.Type.TypeName];
+            }
+            else
+            {
+                Type = new TypeMetadata(parameterBase.Type);
+            }
         }
     }
 }

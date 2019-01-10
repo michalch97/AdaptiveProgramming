@@ -5,48 +5,56 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using AdaptiveProgrammingData;
+using AdaptiveProgrammingData.Bases;
 using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
-    [DataContract(IsReference = true)]
-    public class PropertyMetadata
+    public class PropertyMetadata : PropertyBase
     {
-        [DataMember]
-        private string name;
-        [DataMember]
-        private TypeMetadata typeMetadata;
-        [DataMember]
-        private Tuple<AccessLevel, SealedEnum, AbstractEnum> modifiers;
-        public string Name
-        {
-            get { return this.name; }
-            private set { this.name = value; }
-        }
-        public TypeMetadata TypeMetadata
-        {
-            get { return this.typeMetadata; }
-            private set { this.typeMetadata = value; }
-        }
-        public Tuple<AccessLevel, SealedEnum, AbstractEnum> Modifiers
-        {
-            get { return this.modifiers; }
-            private set { this.modifiers = value; }
-        }
+        public override string Name { get; set; }
+        public override TypeBase Type { get; set; }
+        public override Tuple<AccessLevel, SealedEnum, AbstractEnum> Modifiers { get; set; }
 
-        public PropertyMetadata(string name, TypeMetadata typeMetadata,
+        public PropertyMetadata(string name, TypeBase typeMetadata,
             Tuple<AccessLevel, SealedEnum, AbstractEnum> modifiers)
         {
             this.Name = name;
-            this.TypeMetadata = typeMetadata;
+            this.Type = typeMetadata;
             this.Modifiers = modifiers;
         }
 
-        public static List<PropertyMetadata> EmitProperties(IEnumerable<PropertyInfo> props)
+        public PropertyMetadata(PropertyBase propertyBase)
         {
-            return (from prop in props
-                    where prop.GetGetMethod().GetVisible() || prop.GetSetMethod().GetVisible()
-                    select new PropertyMetadata(prop.Name, TypeMetadata.EmitReference(prop.PropertyType),TypeMetadata.EmitModifiers(prop.PropertyType))).ToList();
+            Name = propertyBase.Name;
+            Modifiers = propertyBase.Modifiers;
+            if (BaseDictionary.typeDictionary.ContainsKey(propertyBase.Type.TypeName))
+            {
+                Type = BaseDictionary.typeDictionary[propertyBase.Type.TypeName];
+            }
+            else
+            {
+                BaseDictionary.typeDictionary.Add(propertyBase.Type.TypeName,null);
+                Type = new TypeMetadata(propertyBase.Type);
+                BaseDictionary.typeDictionary[Type.TypeName] = Type;
+            }
+        }
+
+        public static List<PropertyBase> EmitProperties(IEnumerable<PropertyInfo> props)
+        {
+            List<PropertyMetadata> propertyMetadatas = (from prop in props
+                where prop.GetGetMethod().GetVisible() || prop.GetSetMethod().GetVisible()
+                select new PropertyMetadata(prop.Name, TypeMetadata.EmitReference(prop.PropertyType), TypeMetadata.EmitModifiers(prop.PropertyType))).ToList();
+            List<PropertyBase> propertyBases = new List<PropertyBase>();
+            foreach (PropertyMetadata property in propertyMetadatas)
+            {
+                propertyBases.Add(property);
+            }
+
+            return propertyBases;
+            //return (from prop in props
+            //        where prop.GetGetMethod().GetVisible() || prop.GetSetMethod().GetVisible()
+            //        select new PropertyMetadata(prop.Name, TypeMetadata.EmitReference(prop.PropertyType),TypeMetadata.EmitModifiers(prop.PropertyType))).ToList();
         }
     }
 }

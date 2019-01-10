@@ -16,7 +16,7 @@ namespace AdaptiveProgrammingViewModel
     public class MainViewModel : INotifyPropertyChanged
     {
         public AssemblyMetadata assemblyMetadata;
-        public ISerializableAssembly serializableAssembly;
+        //public ISerializableAssembly serializableAssembly;
         public AssemblyView AssemblyView { get; set; }
         public IDLLSerializer serializer;
         public ObservableCollection<TreeViewItem> TreeViewArea { get; set; }
@@ -90,7 +90,8 @@ namespace AdaptiveProgrammingViewModel
 
         public void SerializeFile()
         {
-            serializer.Serialize(assemblyMetadata);
+            //serializer.Serialize(assemblyMetadata);
+            serializer.Serialize(new AssemblyXML(assemblyMetadata));
             ChangeSerializeButtonState = false;
             OnPropertyChanged("ChangeSerializeButtonState");
         }
@@ -98,7 +99,7 @@ namespace AdaptiveProgrammingViewModel
         public void DeserializeFile()
         {
             AssemblyView = new AssemblyView();
-            assemblyMetadata = serializer.Deserialize<AssemblyMetadata>();
+            assemblyMetadata = new AssemblyMetadata(serializer.Deserialize());
             AssemblyView.initializeAssembly(assemblyMetadata);
             lock (AssemblyView)
             {
