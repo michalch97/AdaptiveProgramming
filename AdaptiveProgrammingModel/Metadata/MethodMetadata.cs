@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using AdaptiveProgrammingData;
 using AdaptiveProgrammingData.Bases;
-using Newtonsoft.Json;
 using MethodBase = System.Reflection.MethodBase;
 
 namespace AdaptiveProgrammingModel
@@ -102,10 +101,7 @@ namespace AdaptiveProgrammingModel
             {
                 parameterBases.Add(parameter);
             }
-
             return parameterBases;
-            //return (from parm in parms
-            //        select new ParameterMetadata(parm.Name, TypeMetadata.EmitReference(parm.ParameterType))).ToList();
         }
         private static TypeBase EmitReturnType(MethodBase method)
         {

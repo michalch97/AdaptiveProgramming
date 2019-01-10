@@ -1,26 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AdaptiveProgrammingData
+namespace AdaptiveProgrammingTrace
 {
-    public class TraceAP
+    [Export(typeof(ITrace))]
+    public class TraceAP : ITrace
     {
-        public static void ErrorLog(string message, string source)
+        public void ErrorLog(string message, string source)
         {
             WriteLog(message, "ERROR", source);
         }
 
-        public static void WarningLog(string message, string source)
+        public void WarningLog(string message, string source)
         {
             WriteLog(message, "WARNING", source);
         }
 
-        public static void InfoLog(string message, string source)
+        public void InfoLog(string message, string source)
         {
             WriteLog(message, "INFO", source);
         }
 
-        private static void WriteLog(string message, string type, string source)
+        private void WriteLog(string message, string type, string source)
         {
             Trace.WriteLine(
                 string.Format("{0} :: {1} :: {2} :: {3}",

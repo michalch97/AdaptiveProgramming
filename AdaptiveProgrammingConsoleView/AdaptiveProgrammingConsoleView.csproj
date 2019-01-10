@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,12 +47,19 @@
     <Compile Include="ConsoleBrowse.cs" />
     <Compile Include="ConsoleMain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TraceAP.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AdaptiveProgrammingMEF\AdaptiveProgrammingMEF.csproj">
+      <Project>{83eaf4b2-2382-40c9-9cd7-3cd6984c4457}</Project>
+      <Name>AdaptiveProgrammingMEF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AdaptiveProgrammingTrace\AdaptiveProgrammingTrace.csproj">
+      <Project>{ceb8dcca-be4c-4ef8-9f6f-14d289dd5f1c}</Project>
+      <Name>AdaptiveProgrammingTrace</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AdaptiveProgrammingViewModel\AdaptiveProgrammingViewModel.csproj">
       <Project>{9ba42c68-83b1-43d3-a09d-c972d385df4c}</Project>
       <Name>AdaptiveProgrammingViewModel</Name>

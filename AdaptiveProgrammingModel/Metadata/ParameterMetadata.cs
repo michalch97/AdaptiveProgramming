@@ -3,7 +3,6 @@ using System.CodeDom;
 using System.Runtime.Serialization;
 using AdaptiveProgrammingData;
 using AdaptiveProgrammingData.Bases;
-using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {

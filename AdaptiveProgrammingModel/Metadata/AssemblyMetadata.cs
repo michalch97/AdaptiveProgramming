@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using AdaptiveProgrammingData;
 using AdaptiveProgrammingData.Bases;
-using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
@@ -30,12 +29,6 @@ namespace AdaptiveProgrammingModel
             {
                 Namespaces.Add(nm);
             }
-            //Namespaces = (from Type t in assembly.GetTypes()
-            //                  //where t.GetVisible()
-            //              group t by t.GetNamespace()
-            //             into g
-            //              orderby g.Key
-            //              select new NamespaceMetadata(g.Key, g)).ToList();
         }
 
         public AssemblyMetadata(AssemblyBase assemblyBase)

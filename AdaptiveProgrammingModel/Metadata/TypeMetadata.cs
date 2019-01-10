@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using AdaptiveProgrammingData;
 using AdaptiveProgrammingData.Bases;
-using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
@@ -282,9 +281,6 @@ namespace AdaptiveProgrammingModel
             }
 
             return typeBases;
-            //return (from type in nestedTypes
-            //        where type.GetVisible()
-            //        select new TypeMetadata(type)).ToList();
         }
         private static List<TypeBase> EmitImplements(IEnumerable<Type> interfaces)
         {

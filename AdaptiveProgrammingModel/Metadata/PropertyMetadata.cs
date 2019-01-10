@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using AdaptiveProgrammingData;
 using AdaptiveProgrammingData.Bases;
-using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
@@ -50,11 +49,7 @@ namespace AdaptiveProgrammingModel
             {
                 propertyBases.Add(property);
             }
-
             return propertyBases;
-            //return (from prop in props
-            //        where prop.GetGetMethod().GetVisible() || prop.GetSetMethod().GetVisible()
-            //        select new PropertyMetadata(prop.Name, TypeMetadata.EmitReference(prop.PropertyType),TypeMetadata.EmitModifiers(prop.PropertyType))).ToList();
         }
     }
 }

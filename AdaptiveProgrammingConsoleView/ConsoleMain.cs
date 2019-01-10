@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
+using AdaptiveProgrammingMEF;
 using AdaptiveProgrammingModel;
+using AdaptiveProgrammingTrace;
 using AdaptiveProgrammingViewModel;
 
 namespace AdaptiveProgrammingConsoleView
@@ -18,7 +22,6 @@ namespace AdaptiveProgrammingConsoleView
 
         static void Main(string[] args)
         {
-            TraceAP.InfoLog("Console Application started", "ConsoleMain");
             exit = false;
             viewModel = new MainViewModel();
             viewModel.DLLFileBrowser = new ConsoleBrowse();
@@ -53,7 +56,6 @@ namespace AdaptiveProgrammingConsoleView
                         }
                         else
                         {
-                            TraceAP.WarningLog("File load fail!", "ConsoleMain");
                             Console.WriteLine("You have to select file - use \"browse\" ");
                         }
 
@@ -75,7 +77,6 @@ namespace AdaptiveProgrammingConsoleView
                         }
                         else
                         {
-                            TraceAP.WarningLog("Serialize fail!", "ConsoleMain");
                             Console.WriteLine("You have to load file - use \"load\" ");
                         }
 
@@ -92,7 +93,6 @@ namespace AdaptiveProgrammingConsoleView
                         break;
                 }
             }
-            TraceAP.InfoLog("Console application finished", "ConsoleMain");
         }
 
         private static void Fold(string nameToFold)

@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -54,7 +55,6 @@
     <Compile Include="Mapper\ParameterMapper.cs" />
     <Compile Include="Mapper\PropertyMapper.cs" />
     <Compile Include="Mapper\TypeMapper.cs" />
-    <Compile Include="TraceAP.cs" />
     <Compile Include="ViewData\AssemblyView.cs" />
     <Compile Include="ViewData\MethodView.cs" />
     <Compile Include="ViewData\NamespaceView.cs" />
@@ -71,9 +71,17 @@
       <Project>{9B6CB902-39B4-404F-B657-1CE3AAEF85E7}</Project>
       <Name>AdaptiveProgrammingData</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AdaptiveProgrammingMEF\AdaptiveProgrammingMEF.csproj">
+      <Project>{83eaf4b2-2382-40c9-9cd7-3cd6984c4457}</Project>
+      <Name>AdaptiveProgrammingMEF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AdaptiveProgrammingModel\AdaptiveProgrammingModel.csproj">
       <Project>{f7389ac9-02bb-483c-9497-97e3dd5760d7}</Project>
       <Name>AdaptiveProgrammingModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AdaptiveProgrammingTrace\AdaptiveProgrammingTrace.csproj">
+      <Project>{ceb8dcca-be4c-4ef8-9f6f-14d289dd5f1c}</Project>
+      <Name>AdaptiveProgrammingTrace</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

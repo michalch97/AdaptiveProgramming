@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F7389AC9-02BB-483C-9497-97E3DD5760D7}</ProjectGuid>
+    <ProjectGuid>{83EAF4B2-2382-40C9-9CD7-3CD6984C4457}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AdaptiveProgrammingModel</RootNamespace>
-    <AssemblyName>AdaptiveProgrammingModel</AssemblyName>
+    <RootNamespace>AdaptiveProgrammingMEF</RootNamespace>
+    <AssemblyName>AdaptiveProgrammingMEF</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -34,7 +34,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,29 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyLoader.cs" />
-    <Compile Include="Metadata\AssemblyMetadata.cs" />
-    <Compile Include="Metadata\ExtensionMethods.cs" />
-    <Compile Include="Metadata\MethodMetadata.cs" />
-    <Compile Include="Metadata\NamespaceMetadata.cs" />
-    <Compile Include="Metadata\ParameterMetadata.cs" />
-    <Compile Include="Metadata\PropertyMetadata.cs" />
-    <Compile Include="Metadata\TypeMetadata.cs" />
+    <Compile Include="MEF.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\AdaptiveProgrammingData\AdaptiveProgrammingData.csproj">
-      <Project>{9b6cb902-39b4-404f-b657-1ce3aaef85e7}</Project>
-      <Name>AdaptiveProgrammingData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AdaptiveProgrammingMEF\AdaptiveProgrammingMEF.csproj">
-      <Project>{83eaf4b2-2382-40c9-9cd7-3cd6984c4457}</Project>
-      <Name>AdaptiveProgrammingMEF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AdaptiveProgrammingTrace\AdaptiveProgrammingTrace.csproj">
-      <Project>{ceb8dcca-be4c-4ef8-9f6f-14d289dd5f1c}</Project>
-      <Name>AdaptiveProgrammingTrace</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

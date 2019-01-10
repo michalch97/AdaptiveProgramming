@@ -5,13 +5,12 @@ using System.Linq;
 using System.Runtime.Serialization;
 using AdaptiveProgrammingData;
 using AdaptiveProgrammingData.Bases;
-using Newtonsoft.Json;
 
 namespace AdaptiveProgrammingModel
 {
     public class NamespaceMetadata : NamespaceBase
     {
-        private List<Type> tp;// = new List<Type>();
+        private List<Type> tp;
         public override string NamespaceName { get; set; }
         public override List<TypeBase> Types { get; set; }
 

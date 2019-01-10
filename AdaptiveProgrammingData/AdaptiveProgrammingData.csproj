@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
@@ -57,7 +58,6 @@
     <Compile Include="Enum\VirtualEnum.cs" />
     <Compile Include="IDLLSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TraceAP.cs" />
     <Compile Include="XMLModel\AssemblyXML.cs" />
     <Compile Include="XMLModel\MethodXML.cs" />
     <Compile Include="XMLModel\NamespaceXML.cs" />
@@ -65,6 +65,16 @@
     <Compile Include="XMLModel\PropertyXML.cs" />
     <Compile Include="XMLModel\TypeXML.cs" />
     <Compile Include="XMLSerializer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AdaptiveProgrammingMEF\AdaptiveProgrammingMEF.csproj">
+      <Project>{83eaf4b2-2382-40c9-9cd7-3cd6984c4457}</Project>
+      <Name>AdaptiveProgrammingMEF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AdaptiveProgrammingTrace\AdaptiveProgrammingTrace.csproj">
+      <Project>{ceb8dcca-be4c-4ef8-9f6f-14d289dd5f1c}</Project>
+      <Name>AdaptiveProgrammingTrace</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -2,13 +2,16 @@
 using System.CodeDom;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using System.Windows.Input;
 using AdaptiveProgrammingData;
+using AdaptiveProgrammingMEF;
 using AdaptiveProgrammingModel;
+using AdaptiveProgrammingTrace;
 using AdaptiveProgrammingViewModel.Annotations;
 
 namespace AdaptiveProgrammingViewModel
@@ -16,9 +19,13 @@ namespace AdaptiveProgrammingViewModel
     public class MainViewModel : INotifyPropertyChanged
     {
         public AssemblyMetadata assemblyMetadata;
-        //public ISerializableAssembly serializableAssembly;
         public AssemblyView AssemblyView { get; set; }
+
+        [Import(typeof(IDLLSerializer))]
         public IDLLSerializer serializer;
+
+        [Import(typeof(ITrace))]
+        public ITrace Trace { get; set; }
         public ObservableCollection<TreeViewItem> TreeViewArea { get; set; }
         public string DLLPath { get; set; }
         public bool ChangeLoadButtonState { get; set; }
@@ -42,9 +49,9 @@ namespace AdaptiveProgrammingViewModel
         }
         public MainViewModel()
         {
+            MEF.Compose(this);
             TreeViewArea = new ObservableCollection<TreeViewItem>();
             AssemblyView assemblyView = new AssemblyView();
-            serializer = new XMLSerializer();
             ChangeLoadButtonState = false;
             OnPropertyChanged("ChangeLoadButtonState");
             ChangeSerializeButtonState = false;
@@ -69,17 +76,18 @@ namespace AdaptiveProgrammingViewModel
             }
             else
             {
-                TraceAP.WarningLog("You should chose a DLL or XML file", "MainViewModel");
+                Trace.WarningLog("You should chose a DLL or XML file", "MainViewModel");
                 return;
             }
         }
 
         public void LoadDLLFile()
         {
-            assemblyMetadata = AssemblyLoader.LoadAssembly(DLLPath);
+            AssemblyLoader assemblyLoader = new AssemblyLoader();
+            assemblyMetadata = assemblyLoader.LoadAssembly(DLLPath);
             AssemblyView = new AssemblyView();
             AssemblyView.initializeAssembly(assemblyMetadata);
-            TraceAP.InfoLog("AssemblyView initialized", "MainViewModel");
+            Trace.InfoLog("AssemblyView initialized", "MainViewModel");
             TreeViewArea.Clear();
             TreeViewArea.Add(AssemblyView);
             ChangeLoadButtonState = false;
@@ -90,7 +98,6 @@ namespace AdaptiveProgrammingViewModel
 
         public void SerializeFile()
         {
-            //serializer.Serialize(assemblyMetadata);
             serializer.Serialize(new AssemblyXML(assemblyMetadata));
             ChangeSerializeButtonState = false;
             OnPropertyChanged("ChangeSerializeButtonState");
