@@ -10,45 +10,57 @@ namespace AdaptiveProgrammingModel
         public TypeView(TypeMetadata typeMetadata)
         {
             string interfaces = " : ";
-            foreach (TypeMetadata interfaceMetadata in typeMetadata.ImplementedInterfaces)
+            if (typeMetadata.ImplementedInterfaces != null)
             {
-                interfaces += (interfaceMetadata.TypeName + ", ");
+                foreach (TypeMetadata interfaceMetadata in typeMetadata.ImplementedInterfaces)
+                {
+                    interfaces += (interfaceMetadata.TypeName + ", ");
+                }
             }
 
             string before = "";
-            switch (typeMetadata.Modifiers.Item1)
+            if (typeMetadata.Modifiers != null)
             {
-                case AccessLevel.IsPrivate:
-                    before += "private ";
-                    break;
-                case AccessLevel.IsProtected:
-                    before += "protected ";
-                    break;
-                case AccessLevel.IsProtectedInternal:
-                    before += "internal ";
-                    break;
-                case AccessLevel.IsPublic:
-                    before += "public ";
-                    break;
+                switch (typeMetadata.Modifiers.Item1)
+                {
+                    case AccessLevel.IsPrivate:
+                        before += "private ";
+                        break;
+                    case AccessLevel.IsProtected:
+                        before += "protected ";
+                        break;
+                    case AccessLevel.IsProtectedInternal:
+                        before += "internal ";
+                        break;
+                    case AccessLevel.IsPublic:
+                        before += "public ";
+                        break;
+                }
+            
+                switch (typeMetadata.Modifiers.Item3)
+                {
+                    case AbstractEnum.Abstract:
+                        before += "abstract ";
+                        break;
+                }
             }
-            switch (typeMetadata.Modifiers.Item3)
+
+            if (typeMetadata.TypeKind!=null)
             {
-                case AbstractEnum.Abstract:
-                    before += "abstract ";
-                    break;
+                switch (typeMetadata.TypeKind)
+                {
+                    case TypeKind.ClassType:
+                        before += "class ";
+                        break;
+                    case TypeKind.InterfaceType:
+                        before += "interface ";
+                        break;
+                    case TypeKind.EnumType:
+                        before += "enum ";
+                        break;
+                }
             }
-            switch (typeMetadata.TypeKind)
-            {
-                case TypeKind.ClassType:
-                    before += "class ";
-                    break;
-                case TypeKind.InterfaceType:
-                    before += "interface ";
-                    break;
-                case TypeKind.EnumType:
-                    before += "enum ";
-                    break;
-            }
+            
 
             Name = before + typeMetadata.TypeName + (interfaces.Length != 3 ? interfaces : null);
             this.typeMetadata = typeMetadata;
@@ -66,13 +78,21 @@ namespace AdaptiveProgrammingModel
                     Children.Add(new TypeView(nestedTypeMetadata));
                 }
             }
-            foreach (MethodMetadata methodMetadata in typeMetadata.Methods)
+
+            if (typeMetadata.Methods != null)
             {
-                Children.Add(new MethodView(methodMetadata, typeMetadata.TypeName));
+                foreach (MethodMetadata methodMetadata in typeMetadata.Methods)
+                {
+                    Children.Add(new MethodView(methodMetadata, typeMetadata.TypeName));
+                }
             }
-            foreach (PropertyMetadata propertyMetadata in typeMetadata.Properties)
+
+            if (typeMetadata.Properties != null)
             {
-                Children.Add(new PropertyView(propertyMetadata));
+                foreach (PropertyMetadata propertyMetadata in typeMetadata.Properties)
+                {
+                    Children.Add(new PropertyView(propertyMetadata));
+                }
             }
         }
     }
